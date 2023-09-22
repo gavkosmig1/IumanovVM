@@ -107,8 +107,7 @@ void InSettings(int& NumStr, int& FirstRow) {
 	vector<int> NumStr_FirstRow = { 0, 0 };
 	int flag = 0;
 	getline(cin, Cum);
-	for (char i : Cum)
-	{
+	for (char i : Cum) {
 		switch (flag)
 		{
 		case(0):
@@ -173,9 +172,9 @@ void Bot_move(vector<int>& map) {
 	int Nim_Num = 0, losei = 0, losej = 0;
 	vector<int> TechMap = map; // Временный вектор, на котором тестируются мувы
 	for (int i = 0; i < map.size(); ++i) {
-		for (int j = 0; j < map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
+		for (int j = 1; j <=map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
 			TechMap[i] -= j; // Делает мув
-			for (int k : map) {
+			for (int k : TechMap) {
 				Nim_Num ^= k;
 			} // Считает Ним-Число для этого мува
 			if (Nim_Num == 0) { // Если мув выигрышный
@@ -188,6 +187,7 @@ void Bot_move(vector<int>& map) {
 				goto exit_excellent; // И выходим из функции
 			}
 			TechMap = map; // Если мув не нашелся, обнуляем временный вектор
+			Nim_Num = 0;
 		}
 	} // Если выигрышный мув не нашелся
 	losei = rand() % map.size(); // Случайная строка
@@ -199,7 +199,6 @@ void Bot_move(vector<int>& map) {
 		map[losei] -= losej; // Случайный мув
 	}
 exit_excellent:;
-
 }
 
 int main() { //Начало
