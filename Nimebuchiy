@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include<vector>
+#include <vector>
 #include <time.h>
 
 using namespace std;
@@ -13,7 +13,14 @@ void Hello(const vector<int>& map) {
 		<< "*       Выигрывает тот, кто возьмет последнюю фишку.       *\n"
 		<< "* Номер ряда                                  Кол-во фишек *\n";
 	for (int i = 0; i < map.size(); ++i) {
-			cout << "*      " << i+1 << "                                            " << map[i] << "       *\n";
+			string tokens(map[i], '*');
+			string spaces(22 - (map[i] + 1) / 2, ' ');
+			if (map[i] % 2 == 0) {
+				cout << "*       " << i + 1 << spaces << tokens << spaces << map[i] << "     *\n";
+			}
+			else {
+				cout << "*       " << i + 1 << spaces << tokens << spaces << map[i] << "      *\n";
+			}
 	} // Выводим по отдельности индекс и кол-во фишек в строке
 	cout << "*      Введите ваш ход в формате РЯД КОЛИЧ (например,      *\n"
 		<< "*              2 3 - взять из 2 ряда 3 фишки)              *\n"
@@ -45,30 +52,31 @@ void Lose() {
 }
 
 // Функциональныe функции
-vector<int> Moving(vector<int>& map, int start) {
-	for (int Moving = start; Moving < map.size() - 1; ++Moving) {
-		map[Moving] == map[Moving + 1];
-	} // Двигаем весь массив, если строка оказалась пуста
-	map.pop_back();
-	return map;
+void Moving(vector<int>& map, int start) {
+	vector<int> result;
+	for (int i = 0; i < map.size(); ++i) {
+		if (i != start) {
+			result.push_back(map[i]);
+		}
+	}
+	map = result;
 }
 
 //Функции мувов
-vector<int> Player_move(vector<int>& map, int MoveRow, int MoveCum) {
+void Player_move(vector<int>& map, int MoveRow, int MoveCum) {
 	if (map[MoveRow] < MoveCum) {
 		cout << "Неправильный ввод!";
 	}
 	else if (map[MoveRow] == MoveCum) {
-		Moving(map, MoveRow);
+		Moving(map, MoveRow-1);
 	}
 	else {
-		map[MoveRow] -= MoveCum;
+		map[MoveRow-1] -= MoveCum;
 	}
-	return map;
 }
 
-vector<int> Bot_move(vector<int>& map) {
-	int Nim_Num = 0, losei = 0, losej = 0;
+void Bot_move(vector<int>& map) {
+	int Nim_Num = 0, losei = 0, losej = 0, flag = 0;
 	for (int i = 0; i < map.size(); ++i) {
 		for (int j = 0; j < map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
 			Nim_Num = 0;
@@ -82,39 +90,43 @@ vector<int> Bot_move(vector<int>& map) {
 				else {
 					map[i] -= j;
 				}
-				return map;
+				flag = 1;
 			}
 		}
 	} // Если выигрышный мув не нашелся
-	losei = rand() % map.size(); // Случайная строка
-	losej = rand() % map[losei]; // Случайное число фишек
-	if (map[losei] == losej) {
-		Moving(map, losei);
+	if (flag == 0) {
+		losei = rand() % map.size(); // Случайная строка
+		losej = rand() % map[losei]; // Случайное число фишек
+		if (map[losei] == losej) {
+			Moving(map, losei);
+		}
+		else {
+			map[losei] -= losej;
+		} // Случайный мув
 	}
-	else {
-		map[losei] -= losej;
-	} // Случайный мув
-	
+
 }
 
 //Начало
 int main() {
 	srand(time(NULL));
 	vector<int> map{ 3,4,5 };
-	
 	Hello(map);
-	
 	int MoveRow, MoveCum;
 	cin >> MoveRow >> MoveCum;
 	while ((MoveRow != 0) && (MoveCum != 0)) {
 		Player_move(map, MoveRow, MoveCum);
 		if (map.empty()) {
 			Win();
+			map = { 3,4,5 };
 		}
-		Bot_move(map);
-		if (map.empty()) {
-			Lose();
+		else {
+			Bot_move(map);
+			if (map.empty()) {
+				Lose();
+				map = { 3,4,5 };
+			}
 		}
-		Hello(map);
+		cin >> MoveRow >> MoveCum;
 	}
 }
