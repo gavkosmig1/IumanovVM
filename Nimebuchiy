@@ -69,7 +69,7 @@ bool XOr(bool a, bool b) {
 
 void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 	int Tvar = 0, flag;
-	vector<int> NumStr_FirstRow { 0, 0 };
+	vector<int> NumStr_FirstRow { 100, 100 };
 	string Cum;
 	while (Tvar == 0) {
 		Cum.clear();
@@ -93,10 +93,10 @@ void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 				break;
 			}
 		} // Если в одной из переменных 0, а в другой не 0, либо если ход недопустимый
-		if ( XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[1] == 0) || (NumStr_FirstRow[0] > map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]-1])) {
-			cout << "Неправильный ввод, попытайся снова\n" << "\n";
-			NumStr_FirstRow[0] = 0;
-			NumStr_FirstRow[1] = 0;
+		if ( XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]-1])) {
+			cout << "Неправильный ввод, попытайся снова\n";
+			NumStr_FirstRow[0] = 100;
+			NumStr_FirstRow[1] = 100;
 		}
 		else {
 			Tvar = 1;
@@ -109,7 +109,7 @@ void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 
 void InSettings(int& NumStr, int& FirstRow) {
 	string Cum;
-	vector<int> NumStr_FirstRow = { 0, 0 };
+	vector<int> NumStr_FirstRow = { 100, 100 };
 	int flag, Tvar = 0;
 	while (Tvar == 0) {
 		Cum.clear();
@@ -119,24 +119,24 @@ void InSettings(int& NumStr, int& FirstRow) {
 			switch (flag) {
 			case(0):
 				if (Cum[i] >= '0' && Cum[i] <= '9') {
-					NumStr_FirstRow[0] += (int)Cum[i] - 48;
+					NumStr_FirstRow[0] = (int)Cum[i] - 48;
 					++flag;
 				}
 				break;
 			case(1):
 				if (Cum[i] >= '0' && Cum[i] <= '9') {
-					NumStr_FirstRow[1] += (int)Cum[i] - 48;
+					NumStr_FirstRow[1] = (int)Cum[i] - 48;
 					flag++;
 				}
 				break;
 			default:
 				break;
 			}
-		}
-		if (XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[1] == 0)) {
+		} // Если в одной из переменных 0, а в другой не 0
+		if (XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > 9) || (NumStr_FirstRow[1] > 9)) {
 			cout << "Неправильный ввод, попытайся снова\n";
-			NumStr_FirstRow[0] = 0;
-			NumStr_FirstRow[1] = 0;
+			NumStr_FirstRow[0] = 100;
+			NumStr_FirstRow[1] = 100;
 		}
 		else {
 			Tvar = 1;
@@ -146,11 +146,17 @@ void InSettings(int& NumStr, int& FirstRow) {
 	FirstRow = NumStr_FirstRow[1];
 }
 
-void NewGame(vector<int>& map) {
+void NewGame(vector<int>& map, int& MoveRow, int& MoveCum) {
 	int NumStr, FirstRow; // Генерируем поле игры с увеличивающимися строками символов
 	InSettings(NumStr, FirstRow);
-	for (int i = 0; i < NumStr; ++i) {
-		map.push_back(FirstRow + i);
+	if ((NumStr == 0) && (FirstRow == 0)) {
+		MoveRow = 0;
+		MoveCum = 0;
+	}
+	else {
+		for (int i = 0; i < NumStr; ++i) {
+			map.push_back(FirstRow + i);
+		}
 	}
 }
 
@@ -211,10 +217,13 @@ int main() { //Начало
 	srand(time(NULL));
 	setlocale(LC_ALL, "Russian");
 	vector<int> map;
-	int MoveRow = 0, MoveCum = 0;
-
+	int MoveRow = 1, MoveCum = 1;
 	HelloNewGame();
-	NewGame(map);
+	NewGame(map, MoveRow, MoveCum);
+
+	if ((MoveRow == 0) || (MoveCum == 0)) {
+		goto exit;
+	}
 	Interface(map);
 	InTurn(MoveRow, MoveCum, map);
 
@@ -222,14 +231,20 @@ int main() { //Начало
 		Player_move(map, MoveRow, MoveCum);
 		if (map.empty()) { // Игрок победил
 			Win();
-			NewGame(map);
+			NewGame(map, MoveRow, MoveCum);
+			if ((MoveRow == 0) || (MoveCum == 0)) {
+				goto exit;
+			}
 			Interface(map);
 		}
 		else {
 			Bot_move(map);
 			if (map.empty()) { // Бот победил
 				Lose();
-				NewGame(map);
+				NewGame(map, MoveRow, MoveCum);
+				if ((MoveRow == 0) || (MoveCum == 0)) {
+					goto exit;
+				}
 				Interface(map);
 			}
 			else { // Иначе игра продолжается
@@ -238,4 +253,5 @@ int main() { //Начало
 		}
 		InTurn(MoveRow, MoveCum, map);
 	}
+exit:;
 }
