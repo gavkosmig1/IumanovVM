@@ -134,7 +134,7 @@ void InSettings(int& NumStr, int& FirstRow) {
 			}
 		}
 		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0) || XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[0] == 0)) {
-			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0];
+			cout << "Неправильный ввод, попытайся снова\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
 		}
