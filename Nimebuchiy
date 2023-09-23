@@ -93,7 +93,7 @@ void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 				break;
 			}
 		} // Если в одной из переменных 0, а в другой не 0, либо если ход недопустимый
-		if ( XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[0] >= map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]])) {
+		if ( XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[1] == 0) || (NumStr_FirstRow[0] >= map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]])) {
 			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0] << ' ' << NumStr_FirstRow[1] << "\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
@@ -133,7 +133,7 @@ void InSettings(int& NumStr, int& FirstRow) {
 				break;
 			}
 		}
-		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0) || XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[0] == 0)) {
+		if (XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[1] == 0)) {
 			cout << "Неправильный ввод, попытайся снова\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
