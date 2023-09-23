@@ -64,33 +64,25 @@ void Lose() {
 
 // Функциональныe функции
 
-void InTurn(int& MoveRow, int& MoveCum) {
-	int Tvar = 0;
-	vector<int> NumStr_FirstRow;
+void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
+	int Tvar = 0, flag;
+	vector<int> NumStr_FirstRow { 0, 0 };
+	string Cum;
 	while (Tvar == 0) {
-		string Cum;
-		NumStr_FirstRow = { 0, 0 };
-		int flag = 0;
+		Cum.clear();
+		flag = 0;
 		getline(cin, Cum);
-		for (char i : Cum)
-		{
-			switch (flag)
-			{
+		for (int i = 0; i < Cum.size(); ++i) {
+			switch (flag) {
 			case(0):
-				if (isdigit(i)) {
-					NumStr_FirstRow[0] *= 10;
-					NumStr_FirstRow[0] += int(i) - '0';
-				}
-				else {
-					flag++;
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[0] += (int)Cum[i] - 48;
+					++flag;
 				}
 				break;
 			case(1):
-				if (isdigit(i)) {
-					NumStr_FirstRow[1] *= 10;
-					NumStr_FirstRow[1] += int(i) - '0';
-				}
-				else {
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[1] += (int)Cum[i] - 48;
 					flag++;
 				}
 				break;
@@ -99,7 +91,7 @@ void InTurn(int& MoveRow, int& MoveCum) {
 			}
 		}
 		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
-			cout << "Неправильный ввод, попытайся снова\n";
+			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0] << ' ' << NumStr_FirstRow[1] << "\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
 		}
@@ -115,26 +107,22 @@ void InTurn(int& MoveRow, int& MoveCum) {
 void InSettings(int& NumStr, int& FirstRow) {
 	string Cum;
 	vector<int> NumStr_FirstRow = { 0, 0 };
-	int flag = 0, Tvar = 0;
+	int flag, Tvar = 0;
 	while (Tvar == 0) {
+		Cum.clear();
+		flag = 0;
 		getline(cin, Cum);
-		for (char i : Cum) {
+		for (int i = 0; i < Cum.size(); ++i) {
 			switch (flag) {
 			case(0):
-				if (isdigit(i)) {
-					NumStr_FirstRow[0] *= 10;
-					NumStr_FirstRow[0] += int(i) - '0';
-				}
-				else {
-					flag++;
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[0] += (int)Cum[i] - 48;
+					++flag;
 				}
 				break;
 			case(1):
-				if (isdigit(i)) {
-					NumStr_FirstRow[1] *= 10;
-					NumStr_FirstRow[1] += int(i) - '0';
-				}
-				else {
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[1] += (int)Cum[i] - 48;
 					flag++;
 				}
 				break;
@@ -143,7 +131,7 @@ void InSettings(int& NumStr, int& FirstRow) {
 			}
 		}
 		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
-			cout << "Неправильный ввод, попытайся снова\n";
+			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0] << ' ' << NumStr_FirstRow[1] << "\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
 		}
@@ -155,6 +143,7 @@ void InSettings(int& NumStr, int& FirstRow) {
 	FirstRow = NumStr_FirstRow[1];
 	cout << NumStr << ' ' << FirstRow << "\n";
 }
+
 
 void NewGame(vector<int>& map) {
 	int NumStr, FirstRow; // Генерируем поле игры с увеличивающимися строками символов
@@ -176,10 +165,7 @@ void Moving(vector<int>& map, int start) {
 
 //Функции мувов
 void Player_move(vector<int>& map, int MoveRow, int MoveCum) {
-	if (map[MoveRow - 1] < MoveCum) {
-		cout << "Неправильный ввод!\n";
-	}
-	else if (map[MoveRow - 1] == MoveCum) {
+	if (map[MoveRow - 1] == MoveCum) {
 		Moving(map, MoveRow - 1);
 	}
 	else {
@@ -229,7 +215,7 @@ int main() { //Начало
 	HelloNewGame();
 	NewGame(map);
 	Interface(map);
-	InTurn(MoveRow, MoveCum);
+	InTurn(MoveRow, MoveCum, map);
 
 	while ((MoveRow != 0) || (MoveCum != 0)) { // Пока игрок не закроет игру вводом 0 0
 		Player_move(map, MoveRow, MoveCum);
@@ -249,6 +235,6 @@ int main() { //Начало
 				Interface(map);
 			}
 		}
-		InTurn(MoveRow, MoveCum);
+		InTurn(MoveRow, MoveCum, map);
 	}
 }
