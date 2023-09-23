@@ -63,6 +63,9 @@ void Lose() {
 }
 
 // Функциональныe функции
+bool XOr(bool a, bool b) {
+	return ((a || b) && !(a && b));
+}
 
 void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 	int Tvar = 0, flag;
@@ -76,21 +79,21 @@ void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 			switch (flag) {
 			case(0):
 				if (Cum[i] >= '0' && Cum[i] <= '9') {
-					NumStr_FirstRow[0] += (int)Cum[i] - 48;
+					NumStr_FirstRow[0] = (int)Cum[i] - 48;
 					++flag;
 				}
 				break;
 			case(1):
 				if (Cum[i] >= '0' && Cum[i] <= '9') {
-					NumStr_FirstRow[1] += (int)Cum[i] - 48;
+					NumStr_FirstRow[1] = (int)Cum[i] - 48;
 					flag++;
 				}
 				break;
 			default:
 				break;
 			}
-		}
-		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
+		} // Если в одной из переменных 0, а в другой не 0, либо если ход недопустимый
+		if ( XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[0] >= map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]])) {
 			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0] << ' ' << NumStr_FirstRow[1] << "\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
@@ -130,8 +133,8 @@ void InSettings(int& NumStr, int& FirstRow) {
 				break;
 			}
 		}
-		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
-			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0] << ' ' << NumStr_FirstRow[1] << "\n";
+		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0) || XOr(NumStr_FirstRow[0] == 0, NumStr_FirstRow[0] == 0)) {
+			cout << "Неправильный ввод, попытайся снова\n" << NumStr_FirstRow[0];
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
 		}
@@ -142,7 +145,6 @@ void InSettings(int& NumStr, int& FirstRow) {
 	NumStr = NumStr_FirstRow[0];
 	FirstRow = NumStr_FirstRow[1];
 }
-
 
 void NewGame(vector<int>& map) {
 	int NumStr, FirstRow; // Генерируем поле игры с увеличивающимися строками символов
