@@ -141,7 +141,6 @@ void InSettings(int& NumStr, int& FirstRow) {
 	}
 	NumStr = NumStr_FirstRow[0];
 	FirstRow = NumStr_FirstRow[1];
-	cout << NumStr << ' ' << FirstRow << "\n";
 }
 
 
