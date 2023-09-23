@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <locale.h>
 
 using namespace std;
 
@@ -28,9 +29,7 @@ void Interface(const vector<int>& map) {
 		<< "*       Выигрывает тот, кто возьмет последнюю фишку.       *\n"
 		<< "* Номер ряда                                  Кол-во фишек *\n";
 	for (int i = 0; i < map.size(); ++i) {
-		string tokens(map[i], '*');
-		string spaces(32 - map[i], ' ');
-		cout << "*      " << i + 1 << "            " << tokens << spaces << map[i] << "      *\n";
+		cout << "*      " << i + 1 << "            " << string(map[i], '*') << string(32 - map[i], ' ') << map[i] << "      *\n";
 	} // Выводим по отдельности индекс и кол-во фишек в строке
 	cout << "*      Введите ваш ход в формате РЯД КОЛИЧ (например,      *\n"
 		<< "*              2 3 - взять из 2 ряда 3 фишки)              *\n"
@@ -66,38 +65,49 @@ void Lose() {
 // Функциональныe функции
 
 void InTurn(int& MoveRow, int& MoveCum) {
-	string Cum;
-	vector<int> NumStr_FirstRow = { 0, 0 };
-	int flag = 0;
-	getline(cin, Cum);
-	for (char i : Cum)
-	{
-		switch (flag)
+	int Tvar = 0;
+	vector<int> NumStr_FirstRow;
+	while (Tvar == 0) {
+		string Cum;
+		NumStr_FirstRow = { 0, 0 };
+		int flag = 0;
+		getline(cin, Cum);
+		for (char i : Cum)
 		{
-		case(0):
-			if (isdigit(i)) {
-				NumStr_FirstRow[0] *= 10;
-				NumStr_FirstRow[0] += int(i) - '0';
+			switch (flag)
+			{
+			case(0):
+				if (isdigit(i)) {
+					NumStr_FirstRow[0] *= 10;
+					NumStr_FirstRow[0] += int(i) - '0';
+				}
+				else {
+					flag++;
+				}
+				break;
+			case(1):
+				if (isdigit(i)) {
+					NumStr_FirstRow[1] *= 10;
+					NumStr_FirstRow[1] += int(i) - '0';
+				}
+				else {
+					flag++;
+				}
+				break;
+			default:
+				break;
 			}
-			else {
-				flag++;
-			}
-			break;
-		case(1):
-			if (isdigit(i)) {
-				NumStr_FirstRow[1] *= 10;
-				NumStr_FirstRow[1] += int(i) - '0';
-			}
-			else {
-				flag++;
-			}
-			break;
-		default:
+		}
+		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
+			cout << "Неправильный ввод, попытайся снова\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
-			break;
+		}
+		else {
+			Tvar = 1;
 		}
 	}
+
 	MoveRow = NumStr_FirstRow[0];
 	MoveCum = NumStr_FirstRow[1];
 }
@@ -105,36 +115,45 @@ void InTurn(int& MoveRow, int& MoveCum) {
 void InSettings(int& NumStr, int& FirstRow) {
 	string Cum;
 	vector<int> NumStr_FirstRow = { 0, 0 };
-	int flag = 0;
-	getline(cin, Cum);
-	for (char i : Cum) {
-		switch (flag)
-		{
-		case(0):
-			if (isdigit(i)) {
-				NumStr_FirstRow[0] *= 10;
-				NumStr_FirstRow[0] += int(i) - '0';
-			} else {
-				flag++;
+	int flag = 0, Tvar = 0;
+	while (Tvar == 0) {
+		getline(cin, Cum);
+		for (char i : Cum) {
+			switch (flag) {
+			case(0):
+				if (isdigit(i)) {
+					NumStr_FirstRow[0] *= 10;
+					NumStr_FirstRow[0] += int(i) - '0';
+				}
+				else {
+					flag++;
+				}
+				break;
+			case(1):
+				if (isdigit(i)) {
+					NumStr_FirstRow[1] *= 10;
+					NumStr_FirstRow[1] += int(i) - '0';
+				}
+				else {
+					flag++;
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		case(1):
-			if (isdigit(i)) {
-				NumStr_FirstRow[1] *= 10;
-				NumStr_FirstRow[1] += int(i) - '0';
-			}
-			else {
-				flag++;
-			}
-			break;
-		default:
+		}
+		if ((NumStr_FirstRow[0] == 0) || (NumStr_FirstRow[1] == 0)) {
+			cout << "Неправильный ввод, попытайся снова\n";
 			NumStr_FirstRow[0] = 0;
 			NumStr_FirstRow[1] = 0;
-			break;
+		}
+		else {
+			Tvar = 1;
 		}
 	}
 	NumStr = NumStr_FirstRow[0];
 	FirstRow = NumStr_FirstRow[1];
+	cout << NumStr << ' ' << FirstRow << "\n";
 }
 
 void NewGame(vector<int>& map) {
@@ -160,7 +179,7 @@ void Player_move(vector<int>& map, int MoveRow, int MoveCum) {
 	if (map[MoveRow - 1] < MoveCum) {
 		cout << "Неправильный ввод!\n";
 	}
-	else if (map[MoveRow-1] == MoveCum) {
+	else if (map[MoveRow - 1] == MoveCum) {
 		Moving(map, MoveRow - 1);
 	}
 	else {
@@ -172,7 +191,7 @@ void Bot_move(vector<int>& map) {
 	int Nim_Num = 0, losei = 0, losej = 0;
 	vector<int> TechMap = map; // Временный вектор, на котором тестируются мувы
 	for (int i = 0; i < map.size(); ++i) {
-		for (int j = 1; j <=map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
+		for (int j = 1; j <= map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
 			TechMap[i] -= j; // Делает мув
 			for (int k : TechMap) {
 				Nim_Num ^= k;
@@ -203,6 +222,7 @@ exit_excellent:;
 
 int main() { //Начало
 	srand(time(NULL));
+	setlocale(LC_ALL, "Russian");
 	vector<int> map;
 	int MoveRow, MoveCum;
 
@@ -211,13 +231,13 @@ int main() { //Начало
 	Interface(map);
 	InTurn(MoveRow, MoveCum);
 
-	while ((MoveRow != 0) && (MoveCum != 0)) { // Пока игрок не закроет игру вводом 0 0
+	while ((MoveRow != 0) || (MoveCum != 0)) { // Пока игрок не закроет игру вводом 0 0
 		Player_move(map, MoveRow, MoveCum);
 		if (map.empty()) { // Игрок победил
 			Win();
 			NewGame(map);
 			Interface(map);
-		} 
+		}
 		else {
 			Bot_move(map);
 			if (map.empty()) { // Бот победил
