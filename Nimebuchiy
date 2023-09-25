@@ -202,8 +202,8 @@ void Bot_move(vector<int>& map) {
 			Nim_Num = 0;
 		}
 	} // Если выигрышный мув не нашелся
-	losei = rand() % map.size(); // Случайная строка
-	losej = rand() % map[losei]; // Случайное число фишек
+	losei = 1 + rand() % map.size(); // Случайная строка
+	losej = 1 + rand() % map[losei]; // Случайное число фишек
 	if (map[losei] == losej) {
 		Moving(map, losei);
 	}
