@@ -202,7 +202,7 @@ void Bot_move(vector<int>& map) {
 			Nim_Num = 0;
 		}
 	} // Если выигрышный мув не нашелся
-	losei = 1 + rand() % map.size(); // Случайная строка
+	losei = rand() % map.size(); // Случайная строка
 	losej = 1 + rand() % map[losei]; // Случайное число фишек
 	if (map[losei] == losej) {
 		Moving(map, losei);
@@ -222,7 +222,7 @@ int main() { //Начало
 	NewGame(map, MoveRow, MoveCum);
 
 	if ((MoveRow == 0) || (MoveCum == 0)) {
-		goto exit;
+		return 0;
 	}
 	Interface(map);
 	InTurn(MoveRow, MoveCum, map);
@@ -233,7 +233,7 @@ int main() { //Начало
 			Win();
 			NewGame(map, MoveRow, MoveCum);
 			if ((MoveRow == 0) || (MoveCum == 0)) {
-				goto exit;
+				return 0;
 			}
 			Interface(map);
 		}
@@ -243,7 +243,7 @@ int main() { //Начало
 				Lose();
 				NewGame(map, MoveRow, MoveCum);
 				if ((MoveRow == 0) || (MoveCum == 0)) {
-					goto exit;
+					return 0;
 				}
 				Interface(map);
 			}
