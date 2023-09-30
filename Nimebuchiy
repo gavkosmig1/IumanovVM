@@ -69,7 +69,7 @@ bool XOr(bool a, bool b) {
 
 void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 	int Tvar = 0, flag;
-	vector<int> NumStr_FirstRow { 100, 100 };
+	vector<int> NumStr_FirstRow{ 100, 100 };
 	string Cum;
 	while (Tvar == 0) {
 		Cum.clear();
@@ -93,7 +93,7 @@ void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
 				break;
 			}
 		} // Если в одной из переменных 0, а в другой не 0, либо если ход недопустимый
-		if ( XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0]-1])) {
+		if (XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0] - 1])) {
 			cout << "Неправильный ввод, попытайся снова\n";
 			NumStr_FirstRow[0] = 100;
 			NumStr_FirstRow[1] = 100;
@@ -155,7 +155,7 @@ void NewGame(vector<int>& map, int& MoveRow, int& MoveCum) {
 	}
 	else {
 		for (int i = 0; i < NumStr; ++i) {
-			map.push_back(FirstRow + i);
+			map.push_back(min(FirstRow + i, 9));
 		}
 	}
 }
