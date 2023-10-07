@@ -1,0 +1,257 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stdlib.h>
+#include <time.h>
+#include <locale.h>
+
+using namespace std;
+
+//Текстовые функции
+
+void HelloNewGame() {
+	cout << "************************************************************\n"
+		<< "*                     И Г Р А    Н И М                     *\n"
+		<< "*     Вы можете взять любое число фишек из любого ряда     *\n"
+		<< "*       Выигрывает тот, кто возьмет последнюю фишку.       *\n"
+		<< "*             Введите настройки игры в формате             *\n"
+		<< "* КОЛИЧ_СТРОК     (макс 9)     КОЛИЧ_ФИШЕК_В_ПЕРВОЙ_СТРОКЕ *\n"
+		<< "*             (3 3 для классической игры НИМ)              *\n"
+		<< "*            Или введите 0 0 для выхода из игры            *\n"
+		<< "************************************************************\n"
+		<< "Ожидание ввода:\n";
+}
+
+void Interface(const vector<int>& map) {
+	cout << "************************************************************\n"
+		<< "*                     И Г Р А    Н И М                     *\n"
+		<< "*     Вы можете взять любое число фишек из любого ряда     *\n"
+		<< "*       Выигрывает тот, кто возьмет последнюю фишку.       *\n"
+		<< "* Номер ряда                                  Кол-во фишек *\n";
+	for (int i = 0; i < map.size(); ++i) {
+		cout << "*      " << i + 1 << "            " << string(map[i], '*') << string(32 - map[i], ' ') << map[i] << "      *\n";
+	} // Выводим по отдельности индекс и кол-во фишек в строке
+	cout << "*      Введите ваш ход в формате РЯД КОЛИЧ (например,      *\n"
+		<< "*              2 3 - взять из 2 ряда 3 фишки)              *\n"
+		<< "*            Или введите 0 0 для выхода из игры            *\n"
+		<< "************************************************************\n"
+		<< "Ваш ход:\n";
+}
+
+void Win() {
+	cout << "************************************************************\n"
+		<< "*                       Вы выиграли!                       *\n"
+		<< "*                 Чтобы начать новую игру,                 *\n"
+		<< "*             введите настройки игры в формате             *\n"
+		<< "* КОЛИЧ_СТРОК                  КОЛИЧ_ФИШЕК_В_ПЕРВОЙ_СТРОКЕ *\n"
+		<< "*             (3 3 для классической игры НИМ)              *\n"
+		<< "*            Или введите 0 0 для выхода из игры            *\n"
+		<< "************************************************************\n"
+		<< "Ожидание ввода:\n";
+}
+
+void Lose() {
+	cout << "************************************************************\n"
+		<< "*                      Вы проиграли!                       *\n"
+		<< "*                 Чтобы начать новую игру,                 *\n"
+		<< "*             Введите настройки игры в формате             *\n"
+		<< "* КОЛИЧ_СТРОК                  КОЛИЧ_ФИШЕК_В_ПЕРВОЙ_СТРОКЕ *\n"
+		<< "*             (3 3 для классической игры НИМ)              *\n"
+		<< "*            Или введите 0 0 для выхода из игры            *\n"
+		<< "************************************************************\n"
+		<< "Ожидание ввода:\n";
+}
+
+// Функциональныe функции
+bool XOr(bool a, bool b) {
+	return ((a || b) && !(a && b));
+}
+
+void InTurn(int& MoveRow, int& MoveCum, vector<int>& map) {
+	int Tvar = 0, flag;
+	vector<int> NumStr_FirstRow{ 100, 100 };
+	string Cum;
+	while (Tvar == 0) {
+		Cum.clear();
+		flag = 0;
+		getline(cin, Cum);
+		for (int i = 0; i < Cum.size(); ++i) {
+			switch (flag) {
+			case(0):
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[0] = (int)Cum[i] - 48;
+					++flag;
+				}
+				break;
+			case(1):
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[1] = (int)Cum[i] - 48;
+					flag++;
+				}
+				break;
+			default:
+				break;
+			}
+		} // Если в одной из переменных 0, а в другой не 0, либо если ход недопустимый
+		if (XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > map.size()) || (NumStr_FirstRow[1] > map[NumStr_FirstRow[0] - 1])) {
+			cout << "Неправильный ввод, попытайся снова\n";
+			NumStr_FirstRow[0] = 100;
+			NumStr_FirstRow[1] = 100;
+		}
+		else {
+			Tvar = 1;
+		}
+	}
+
+	MoveRow = NumStr_FirstRow[0];
+	MoveCum = NumStr_FirstRow[1];
+}
+
+void InSettings(int& NumStr, int& FirstRow) {
+	string Cum;
+	vector<int> NumStr_FirstRow = { 100, 100 };
+	int flag, Tvar = 0;
+	while (Tvar == 0) {
+		Cum.clear();
+		flag = 0;
+		getline(cin, Cum);
+		for (int i = 0; i < Cum.size(); ++i) {
+			switch (flag) {
+			case(0):
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[0] = (int)Cum[i] - 48;
+					++flag;
+				}
+				break;
+			case(1):
+				if (Cum[i] >= '0' && Cum[i] <= '9') {
+					NumStr_FirstRow[1] = (int)Cum[i] - 48;
+					flag++;
+				}
+				break;
+			default:
+				break;
+			}
+		} // Если в одной из переменных 0, а в другой не 0
+		if (XOr(NumStr_FirstRow[0] <= 0, NumStr_FirstRow[1] <= 0) || (NumStr_FirstRow[0] > 9) || (NumStr_FirstRow[1] > 9)) {
+			cout << "Неправильный ввод, попытайся снова\n";
+			NumStr_FirstRow[0] = 100;
+			NumStr_FirstRow[1] = 100;
+		}
+		else {
+			Tvar = 1;
+		}
+	}
+	NumStr = NumStr_FirstRow[0];
+	FirstRow = NumStr_FirstRow[1];
+}
+
+void NewGame(vector<int>& map, int& MoveRow, int& MoveCum) {
+	int NumStr, FirstRow; // Генерируем поле игры с увеличивающимися строками символов
+	InSettings(NumStr, FirstRow);
+	if ((NumStr == 0) && (FirstRow == 0)) {
+		MoveRow = 0;
+		MoveCum = 0;
+	}
+	else {
+		for (int i = 0; i < NumStr; ++i) {
+			map.push_back(min(FirstRow + i, 9));
+		}
+	}
+}
+
+void Moving(vector<int>& map, int start) {
+	vector<int> result; // Удаление пустой строки
+	for (int i = 0; i < map.size(); ++i) {
+		if (i != start) {
+			result.push_back(map[i]);
+		}
+	}
+	map = result;
+}
+
+//Функции мувов
+void Player_move(vector<int>& map, int MoveRow, int MoveCum) {
+	if (map[MoveRow - 1] == MoveCum) {
+		Moving(map, MoveRow - 1);
+	}
+	else {
+		map[MoveRow - 1] -= MoveCum;
+	}
+}
+
+void Bot_move(vector<int>& map) {
+	int Nim_Num = 0, losei = 0, losej = 0;
+	vector<int> TechMap = map; // Временный вектор, на котором тестируются мувы
+	for (int i = 0; i < map.size(); ++i) {
+		for (int j = 1; j <= map[i]; ++j) { // Выбор мува - i строка, j - кол-во забираемых
+			TechMap[i] -= j; // Делает мув
+			for (int k : TechMap) {
+				Nim_Num ^= k;
+			} // Считает Ним-Число для этого мува
+			if (Nim_Num == 0) { // Если мув выигрышный
+				if (map[i] == j) {
+					Moving(map, i);
+				}
+				else {
+					map[i] -= j;
+				} // Удаляем строку или вычитаем из неё
+				goto exit_excellent; // И выходим из функции
+			}
+			TechMap = map; // Если мув не нашелся, обнуляем временный вектор
+			Nim_Num = 0;
+		}
+	} // Если выигрышный мув не нашелся
+	losei = 1 + rand() % map.size(); // Случайная строка
+	losej = 1 + rand() % map[losei]; // Случайное число фишек
+	if (map[losei] == losej) {
+		Moving(map, losei);
+	}
+	else {
+		map[losei] -= losej; // Случайный мув
+	}
+exit_excellent:;
+}
+
+int main() { //Начало
+	srand(time(NULL));
+	setlocale(LC_ALL, "Russian");
+	vector<int> map;
+	int MoveRow = 1, MoveCum = 1;
+	HelloNewGame();
+	NewGame(map, MoveRow, MoveCum);
+
+	if ((MoveRow == 0) || (MoveCum == 0)) {
+		goto exit;
+	}
+	Interface(map);
+	InTurn(MoveRow, MoveCum, map);
+
+	while ((MoveRow != 0) || (MoveCum != 0)) { // Пока игрок не закроет игру вводом 0 0
+		Player_move(map, MoveRow, MoveCum);
+		if (map.empty()) { // Игрок победил
+			Win();
+			NewGame(map, MoveRow, MoveCum);
+			if ((MoveRow == 0) || (MoveCum == 0)) {
+				goto exit;
+			}
+			Interface(map);
+		}
+		else {
+			Bot_move(map);
+			if (map.empty()) { // Бот победил
+				Lose();
+				NewGame(map, MoveRow, MoveCum);
+				if ((MoveRow == 0) || (MoveCum == 0)) {
+					goto exit;
+				}
+				Interface(map);
+			}
+			else { // Иначе игра продолжается
+				Interface(map);
+			}
+		}
+		InTurn(MoveRow, MoveCum, map);
+	}
+exit:;
+}
