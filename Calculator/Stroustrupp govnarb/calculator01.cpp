@@ -1,5 +1,4 @@
 # include "TokenStream.h"
-
 inline void error(const std::string& input);
 
 void calculate();
@@ -11,23 +10,17 @@ void keep_window_open(std::string& enterToClose);
 int main()
 {
     std::string enterToClose = "~~";
-
-    try
-    {
+    try {
         calculate();
         keep_window_open(enterToClose);
-        return 0;
+        return 0; 
     }
-
-    catch (std::exception& error)
-    {
+    catch (std::exception& error) {
         std::cerr << error.what() << '\n';
         keep_window_open(enterToClose);
         return 1;
     }
-
-    catch (...)
-    {
+    catch (...) {
         std::cerr << "Unknown exception!\n";
         keep_window_open(enterToClose);
         return 2;
@@ -36,13 +29,12 @@ int main()
 
 void calculate()
 {
-    const char quit = 'q';       // t.kind==quit means that t is a quit Token
-    const char print = ';';      // t.kind==print means that t is a print Token
+    const char quit = 'q';                                    // символ для токена выхода
+    const char print = ';';                                  // символ для принт токена
     const std::string prompt = "> ";
-    const std::string equals = "= ";  // used to indicate that what follows is an evaluation
+    const std::string equals = "= ";                         // что выводится перед результатом
     TokenStream tokenStream;
-    std::string enterToClose = "~~";
-
+    std::string enterToClose = "~~";                         // символы для закрытия окна
     while (std::cin)
         try
         {
@@ -50,90 +42,90 @@ void calculate()
             Token token = tokenStream.getToken();
 
             if (token.kind == print)
-                token = tokenStream.getToken();   // eat ';'
+                token = tokenStream.getToken();              // избавиться от точки с запятой
 
             if (token.kind == quit)
                 break;
 
-            tokenStream.setToken(token);      // reset token into tokenStream
+            tokenStream.setToken(token);
             std::cout << equals << expression(tokenStream) << '\n';
         }
 
         catch (std::exception& e)
         {
-            std::cerr << e.what() << '\n';                      // write error message
+            std::cerr << e.what() << '\n';
             tokenStream.ignore(print);
         }
 }
 
 double expression(TokenStream& tokenStream)
 {
-    double result = term(tokenStream);       // set result to value of term
-    Token token = tokenStream.getToken();  // get next token from tokenStream
+    double result = term(tokenStream);                      // результат получает значение от term
+    Token token = tokenStream.getToken();
 
     while (true)
     {
         if (token.kind == '+')
         {
-            result += term(tokenStream);      // evaluate term and add to result
-            token = tokenStream.getToken(); // get next token from tokenStream
+            result += term(tokenStream);                    // подсчет следующего term и +
+            token = tokenStream.getToken();
         }
 
         if (token.kind == '-')
         {
-            result -= term(tokenStream);      // evaluate term and subtract from result
-            token = tokenStream.getToken(); // get next token from tokenStream
+            result -= term(tokenStream);                    // подсчет следующего term и -
+            token = tokenStream.getToken();
         }
 
         if (token.kind != '+' && token.kind != '-')
         {
-            tokenStream.setToken(token);    // reset token into token stream
-            return result;                    // return result
+            tokenStream.setToken(token);                    // иначе возвращаем в поток
+            return result;
         }
     }
 }
 
 double term(TokenStream& tokenStream)
 {
-    double result = primary(tokenStream);   // set result to value of primary
-    Token token = tokenStream.getToken(); // get next token from tokenStream
+    double result = primary(tokenStream);                   // результат получает значение от primary
+    Token token = tokenStream.getToken();
 
     while (true)
     {
         if (token.kind == '*')
         {
-            result *= primary(tokenStream);   // evaluate primary and multiply with result
-            token = tokenStream.getToken(); // get next token from tokenStream
+            result *= primary(tokenStream);                 // подсчет следующего primary и *
+            token = tokenStream.getToken();
         }
 
         else if (token.kind == '/')
         {
-            double divisor = primary(tokenStream);     // set divisor to value of primary
-            if (divisor == 0) error("divide by zero"); // check for error
-            result /= divisor;                           // divide result by divisor
-            token = tokenStream.getToken();      // get next token from tokenStream
+            double divisor = primary(tokenStream);          // делитель получает значение от primary
+            if (divisor == 0) error("divide by zero");
+            result /= divisor;                             // и деление
+            token = tokenStream.getToken();
         }
 
-        else if (token.kind == '%') // modulo will only work on ints for this implementation
+        else if (token.kind == '%')
         {
-            int numer = result; // cast result to int
-            int denom = primary(tokenStream); // cast denom to int
-            if (denom == 0) error("%: divide by zero"); // error check
-            result = numer % denom; // get result
-            token = tokenStream.getToken();      // get next token from tokenStream
+            int numer = result;                            // превращаем исходник в int
+            int denom = primary(tokenStream);              // получаем int делитель
+            if (denom == 0) error("%: divide by zero");
+            result = numer % denom;                        // и остаток от деления
+            token = tokenStream.getToken();
         }
 
         else
         {
-            tokenStream.setToken(token);   // put token back into the Token stream
-            return result;                 // return result
+            tokenStream.setToken(token);                  // иначе возвращаем в поток
+            return result;
         }
     }
 }
 
 double primary(TokenStream& tokenStream)
 {
-    const char number = '8';
+    const char number = '8';                              // символ типа данных для чисел
 
     Token token = tokenStream.getToken();
 
@@ -141,17 +133,17 @@ double primary(TokenStream& tokenStream)
 
     else if (token.kind == '+') return primary(tokenStream);
 
-    else if (token.kind == number) return token.value; // return the number’s value
+    else if (token.kind == number) return token.value;    // возвращаем значение числа
 
-    else if (token.kind == '(') // handle ‘(‘ expression ‘)’
+    else if (token.kind == '(')
     {
-        double result = expression(tokenStream);      // set result to value of expression
-        token = tokenStream.getToken();               // get next token from tokenStream
-        if (token.kind != ')') error("')' expected"); // check for error
-        return result;                                // return divisor
+        double result = expression(tokenStream);          // подсчет всего, что внутри скобок идет в result
+        token = tokenStream.getToken();
+        if (token.kind != ')') error("')' expected");
+        return result;
     }
 
-    else // check for error
+    else
         error("primary expected");
 }
 
@@ -164,38 +156,6 @@ inline void keep_window_open(std::string& enterToClose)
 {
     std::string input= "input";
     std::cout << "Enter" << enterToClose <<"to close the window\n";
-    while (std::getline(std::cin, input))         // keep reading until we find a ~
-        if (input == enterToClose) break;
+    while (std::getline(std::cin, input))
+        if (input == enterToClose) break;                 // пока не введем символ выхода из окна, держим открытым
 }
-
-/*
-          The grammar for input is:
-
-          Statement:
-                    Expression
-                    Print
-                    Quit
-          Print:
-                    ;
-
-          Quit:
-                    q
-
-          Expression:
-                    Term
-                    Expression + Term
-                    Expression – Term
-          Term:
-                    Primary
-                    Term * Primary
-                    Term / Primary
-                    Term % Primary
-          Primary:
-                    Number
-                    ( Expression )
-                    – Primary
-                    + Primary
-          Number:
-                    floating-point-literal
-
-*/
