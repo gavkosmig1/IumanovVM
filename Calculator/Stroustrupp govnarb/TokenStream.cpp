@@ -1,31 +1,31 @@
 #include "TokenStream.h"
 
-TokenStream::TokenStream() {} //ctor
+TokenStream::TokenStream() {}  // а комментарии обязательно на одном уровне ставить?
 
 void TokenStream::setToken(Token token)
 {
     if (full)
         throw std::runtime_error("setToken() into a full buffer");
-    buffer = token;             // copy token to buffer
-    full = true;            // buffer is now full
+    buffer = token;            // копирует токен в буфер
+    full = true;               // теперь в буфере полон
 }
 
 Token TokenStream::getToken()
 {
-    const char number = '8'; // let ‘8’ represent “a number”
-    const char quit = 'q';       // t.kind==quit means that t is a quit Token
-    const char print = ';';      // t.kind==print means that t is a print Token
+    const char number = '8';   // символ для числа
+    const char quit = 'q';     // символ для выхода из проги
+    const char print = ';';    // символ для вывода
 
-    if (full)               // do we already have a Token ready?
+    if (full)                  // если в буфере есть токен
     {
-        full = false;       // remove Token from buffer
+        full = false;          // буфер опустошается и выводится из функции
         return buffer;
     }
 
     char ch;
-    std::cin >> ch;         // skips whitespace (space, newline, tab, etc.)
+    std::cin >> ch;            // ввод символа
 
-    switch (ch)
+    switch (ch)                // анализируем состав входа
     {
     case print:
     case quit:
@@ -36,14 +36,14 @@ Token TokenStream::getToken()
     case '*':
     case '/':
     case '%':
-        return Token {ch};  // let each character represent itself
+        return Token {ch};      // если символ, то возвращаем его же
     case '.':
     case '0':    case '1':    case '2':    case '3':    case '4':
     case '5':    case '6':    case '7':    case '8':    case '9':
     {
-        std::cin.putback(ch);   // put digit back into the input stream
+        std::cin.putback(ch);   // а если число, возвращем его в поток входа
         double val;
-        std::cin >> val;        // read a floating-point number
+        std::cin >> val;        // и считываем число (с плавающей точкой)
         return Token {number, val};
     }
 
@@ -54,16 +54,12 @@ Token TokenStream::getToken()
 
 void TokenStream::ignore(char ch)
 {
-          // first look in buffer:
           if (full && ch == buffer.kind) {
                     full = false;
                     return;
-          }
-
+          }                     // если че-то есть в буфере, он очищается
           full = false;
-
-          // now search input:
-          char ch2 = 0;
+          char ch2 = 0;         // иначе ищем этот символ в потоке входа
           while (std::cin >> ch)
                     if (ch2 == ch) return;
 }
