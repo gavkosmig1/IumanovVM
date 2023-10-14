@@ -11,6 +11,7 @@ class TokenStream
         void setToken(Token token);
         Token getToken();
         void ignore(char ch);
+        void putback (Token t);
 
     protected:
     private:
