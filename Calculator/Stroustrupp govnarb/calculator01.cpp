@@ -1,4 +1,7 @@
+
 # include "TokenStream.h"
+# include <cmath>
+
 inline void error(const std::string& input);
 
 void calculate();
@@ -112,6 +115,15 @@ double term(TokenStream& tokenStream)
             int denom = primary(tokenStream);              // получаем int делитель
             if (denom == 0) error("%: divide by zero");
             result = numer % denom;                        // и остаток от деления
+            token = tokenStream.getToken();
+        }
+
+        else if (token.kind == '^')
+        {
+            double power = primary(tokenStream);           // Степень получает значение от primary
+            if ((power == 0.5) && (result < 0)) error("^: sqrt of negative");
+            if ((floor(power) != power) && (power != 0.5)) error("^: power not integer or 0.5");
+            result = pow(result, power); 
             token = tokenStream.getToken();
         }
 

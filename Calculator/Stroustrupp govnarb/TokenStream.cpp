@@ -6,17 +6,17 @@ void TokenStream::setToken(Token token)
 {
     if (full)
         throw std::runtime_error("setToken() into a full buffer");
-    buffer = token;            // копирует токен в буфер
+    buffer = token;            // копирует вхлд в буфер
     full = true;               // теперь в буфере полон
 }
 
 Token TokenStream::getToken()
 {
-    const char number = '8';   // символ для числа
+    const char number = '8';   // хранящийся символ для числа
     const char quit = 'q';     // символ для выхода из проги
     const char print = ';';    // символ для вывода
 
-    if (full)                  // если в буфере есть токен
+    if (full)                  // если в буфере уже есть токен
     {
         full = false;          // буфер опустошается и выводится из функции
         return buffer;
@@ -36,14 +36,17 @@ Token TokenStream::getToken()
     case '*':
     case '/':
     case '%':
+    case '^':                   // Степень
         return Token {ch};      // если символ, то возвращаем его же
+    case 'k':
+        return Token {number, 1000};
     case '.':
     case '0':    case '1':    case '2':    case '3':    case '4':
     case '5':    case '6':    case '7':    case '8':    case '9':
     {
         std::cin.putback(ch);   // а если число, возвращем его в поток входа
         double val;
-        std::cin >> val;        // и считываем число (с плавающей точкой)
+        std::cin >> val;        // и считываем число полностью
         return Token {number, val};
     }
 
@@ -54,12 +57,12 @@ Token TokenStream::getToken()
 
 void TokenStream::ignore(char ch)
 {
-          if (full && ch == buffer.kind) {
-                    full = false;
-                    return;
-          }                     // если че-то есть в буфере, он очищается
-          full = false;
-          char ch2 = 0;         // иначе ищем этот символ в потоке входа
-          while (std::cin >> ch)
-                    if (ch2 == ch) return;
+    if (full && ch == buffer.kind) {
+        full = false;
+        return;
+    }                     // если че-то есть в буфере, он очищается
+    full = false;
+    char ch2 = 0;         // иначе ищем этот символ в потоке входа
+    while (std::cin >> ch)
+        if (ch2 == ch) return;
 }
