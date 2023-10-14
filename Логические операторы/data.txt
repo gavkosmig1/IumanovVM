@@ -1,32 +1,32 @@
 scheme1 = {
-    elements {
-        src1 = {type: "source", value = true},
-        src2 = {type: "source", value = false},
-        src3 = {type: "source", value = true},
+    elements = {
+        src1 = {type: "source", value: true},
+        src2 = {type: "source", value: false},
+        src3 = {type: "source", value: true},
         and1 = {type: "and"},
-        or1 ={type: "or:},
-    }
-    connections {
+        or1 = {type: "or"}
+    },
+    connections = {
         src1 >> and1,
         src2 >> and1,
         src3 >> or1,
         and1 >> or1,
-        src2 >> or1,
+        src2 >> or1
     }
 },
 scheme222 = {
-    elements {
-        src1 = {type: "source", value = true},
-        src2 = {type: "source", value = false},
-        src3 = {type: "source", value = true},
+    elements = {
+        src1 = {type: "source", value: true},
+        src2 = {type: "source", value: false},
+        src3 = {type: "source", value: true},
         and1 = {type: "and"},
-        or1 ={type: "or:},
-    }
-    connections {
+        or1 = {type: "or"}
+    },
+    connections = {
         src1 >> and1,
         src2 >> and1,
         src3 >> or1,
         and1 >> or1,
-        src2 >> or1,
+        src2 >> or1
     }
-}
+}, 
