@@ -55,19 +55,19 @@ Token TokenStream::getToken()
     }
 }
 
-void TokenStream::putback (Token t)
+void TokenStream::putback (Token token)
 {
   if (full)
     throw std::runtime_error("putback() into a full buffer");
 
-  buffer = t;
+  buffer = token;
   full = true;
 }
 
 void TokenStream::ignore(char ch)
 {
     if (full && ch == buffer.kind) {
-        full = false;
+        full = false;       
         return;
     }                     // если че-то есть в буфере, он очищается
     full = false;
