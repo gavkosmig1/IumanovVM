@@ -1,0 +1,9 @@
+{
+    "editor.fontFamily": "JetBrains Mono",
+    "editor.fontLigatures": false,
+    "editor.formatOnSave": true,
+    "cmake.installPrefix": "${workspaceFolder}",
+    "cmake.environment": {
+        "PATH": "${env:PATH};C:/Documents/GitHub/fltk-1.3.8/bin"
+    }
+}
