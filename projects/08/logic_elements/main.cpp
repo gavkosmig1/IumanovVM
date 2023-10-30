@@ -1,36 +1,36 @@
-﻿#include <iostream>
+#include <iostream>
+#include "logic_elements.h"
 
-#include "logic.h"
+using namespace std;
 
-int main ()
+
+int main()
+try
 {
-  using logic::Element;
-  using logic::ElementType;
-  using logic::Operation;
-  using logic::SignalState;
-  using logic::SourceState;
+    using namespace Logic;
 
-  Element src1{SourceState::on};
-  Element src2{SourceState::off};
-  Element and1{Operation::and_op};
-  Element and2{Operation::and_op, SignalState::inverted};
-  Element or1{Operation::or_op};
+    Element src1    { Type::Source };
+    Element and1    { Type::OperationAnd };
+    Element or1     { Type::OperationOr };
 
-  src1 >> and1 >> ~and2;
-  src2 >> ~and1;
+    src1 >> ~and1 >> or1;
+    
 
-  //  src1 >> src2;  // runtime error
+    if (and1)
+        cout << "and1: true" << endl;
+    else
+        cout << "and1: false" << endl;
 
-  src1 >> ~or1;
-  src2 >> or1;
 
-  std::cout << "src1: " << src1.signal() << ", src2: " << src2.signal()
-            << ", and1: " << and1.signal() << ", and2: " << and2.signal()
-            << ", or1: " << or1.signal() << std::endl;
-
-  src2.set(SourceState::on);
-
-  std::cout << "src1: " << src1.signal() << ", src2: " << src2.signal()
-            << ", and1: " << and1.signal() << ", and2: " << and2.signal()
-            << ", or1: " << or1.signal() << std::endl;
+    return 0;
+}
+catch (std::exception& e)
+{
+    std::cerr << e.what() << std::endl;
+    return 1;
+}
+catch (...)
+{
+    std::cerr << "Something went wrong..." << std::endl;
+    return 2;
 }
