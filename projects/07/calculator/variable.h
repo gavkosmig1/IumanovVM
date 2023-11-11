@@ -12,7 +12,7 @@ struct Variable
     Variable(string n, double v, bool isc) : name{n}, value{v}, isconstant{isc} {}
 };
 
-class Symbol_table  // Хранилище элементов
+class Symbol_table  // Работа с хранилищем элементов
 {
     public:
         vector<Variable> v;  // Само хранилище
@@ -29,6 +29,7 @@ class Symbol_table  // Хранилище элементов
 };
 
 double declaration (bool is_const);  // Объявление переменной
+// Не затрагивает символьную таблицу и просто ищет ошибки
 
 extern vector<Variable> var_table;
 extern Symbol_table symbol_table;

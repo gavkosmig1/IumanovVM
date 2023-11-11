@@ -6,23 +6,23 @@
 vector<Variable> var_table;
 Symbol_table symbol_table(var_table);
 
-double Symbol_table::get_value(const string& s)  // Получение значения переменной
+double Symbol_table::get_value(const string& var_name)  // Получение значения переменной
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
-        if (Symbol_table::v[i].name == s)
+        if (Symbol_table::v[i].name == var_name)
         {
             return Symbol_table::v[i].value;
         }
     }
-    error("Данная переменная не существует ", s);
+    error("Данная переменная не существует ", var_name);
 }
 
-bool Symbol_table::is_declared(const string& s)  // Занято ли имя переменной чек
+bool Symbol_table::is_declared(const string& var_name)  // Занято ли имя переменной чек
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
-        if (Symbol_table::v[i].name == s)
+        if (Symbol_table::v[i].name == var_name)
         {
             return true;
         }
@@ -30,11 +30,11 @@ bool Symbol_table::is_declared(const string& s)  // Занято ли имя п�
     return false;
 }
 
-double Symbol_table::set_value(const string& s, double d)  // Перезапись переменной
+double Symbol_table::set_value(const string& var_name, double new_d)  // Перезапись переменной
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
-        if(Symbol_table::v[i].name == s)
+        if(Symbol_table::v[i].name == var_name)
         {
             if (Symbol_table::v[i].isconstant)
             {
@@ -42,11 +42,11 @@ double Symbol_table::set_value(const string& s, double d)  // Перезапис
             }
             else
             {
-                Symbol_table::v[i].value = d;
-                return d;
+                Symbol_table::v[i].value = new_d;
+                return new_d;
             }
         }
-    error("Переменная не найдена ", s);
+    error("Переменная не найдена ", var_name);
     }
 }
 
