@@ -172,8 +172,5 @@ double asignment (Token t)  // Изменение значения сущест�
 {
     if (t.kind != name)
         error("Имя требуется для изменения значения ");
-    string va = t.name;
-    if (!symbol_table.is_declared(va))
-        error(va, "Изменение значения несущесвующей переменной ");
-    return symbol_table.set_value(va, expression());
+    return symbol_table.set_value(t.name, expression());
 }
