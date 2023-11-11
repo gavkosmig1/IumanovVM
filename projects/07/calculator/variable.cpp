@@ -35,13 +35,20 @@ double Symbol_table::set_value(const string& s, double d)  // Перезапис
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
-        if ((!(Symbol_table::v[i].isconstant)) && (Symbol_table::v[i].name == s))
+        if(Symbol_table::v[i].name == s)
         {
-            Symbol_table::v[i].value = d;
-            return d;
+            if (Symbol_table::v[i].isconstant)
+            {
+                error("Нельзя изменить значение константы ");
+            }
+            else
+            {
+                Symbol_table::v[i].value = d;
+                return d;
+            }
         }
+    error("Переменная не найдена ", s);
     }
-    error("Переменная не найдена или является константой ", s);
 }
 
 double declaration (bool is_const)  // Объявление переменной
