@@ -170,17 +170,10 @@ void calculate () // Калькулирование
 
 double asignment (Token t)  // Изменение значения существующей переменной
 {
-  if (t.kind != name)
-    error("Имя требуется для изменения значения ");
-  string va = t.name;
-  if (!symbol_table.is_declared(va))
-    error(va, "Изменение значения несущесвующей переменной ");
-  for (size_t i = 0; i < (int)symbol_table.v.size(); ++i)
-  {
-    if (symbol_table.v[i].name == va)
-    {
-      return symbol_table.set_value(va, expression());
-    }
-  }
-  error(va, "Переменная с данным именем не найдена ");
+    if (t.kind != name)
+        error("Имя требуется для изменения значения ");
+    string va = t.name;
+    if (!symbol_table.is_declared(va))
+        error(va, "Изменение значения несущесвующей переменной ");
+    return symbol_table.set_value(va, expression());
 }
