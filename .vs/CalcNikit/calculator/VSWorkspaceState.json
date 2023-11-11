@@ -1,0 +1,8 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Локальный компьютер": [
+      "CalcNikit\\calculator\\out\\build\\x64-Debug",
+      "CalcNikit\\calculator\\out\\install\\x64-Debug"
+    ]
+  }
+}

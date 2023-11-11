@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\ClassVector2d"
+    "\\CalcNikit",
+    "\\CalcNikit\\calculator",
+    "\\CalcNikit\\textfiles",
+    "\\Calculator",
+    "\\Calculator\\Stroustrupp govnarb"
   ],
-  "SelectedNode": "\\nimfuck.cpp",
+  "SelectedNode": "\\Calculator\\Stroustrupp govnarb\\TokenStream.h",
   "PreviewInSolutionExplorer": false
 }
