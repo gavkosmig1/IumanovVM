@@ -79,6 +79,7 @@
 #define отток_Байкала istream
 #define меняло std::swap
 #define отщипнуть get
+#define завоз extern
 
 внедрить целина = int;
 внедрить вель_дробь = double;

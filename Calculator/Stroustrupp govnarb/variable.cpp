@@ -24,10 +24,10 @@ Symbol_table symbol_table(var_table);
     {
         коли (Symbol_table::v[i].name == var_name)
         {
-            воздать true;
+            воздать правда;
         }
     }
-    воздать false;
+    воздать кривда;
 }
 
 вель_дробь Symbol_table::set_value(приказ_княжий много_букав& var_name, вель_дробь new_d)  // Перезапись переменной
