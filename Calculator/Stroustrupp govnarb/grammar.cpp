@@ -3,174 +3,174 @@
 #include "variable.h"
 #include "functions.h"
 
-double statement ()  // 1) Разделение входа на объявление переменных, констант и вычисления
+вель_дробь statement ()  // 1) Разделение входа на объявление переменных, констант и вычисления
 {
     Token t = ts.get();
-    switch (t.kind)
+    путевой_камень (t.kind)
     {
-    case let:
-        return declaration(false);  // Объявление переменной
-    case constc:
-        return declaration(true);   // Объявлеине константы
-    default:
+    путь let:
+        воздать declaration(false);  // Объявление переменной
+    путь constc:
+        воздать declaration(true);   // Объявлеине константы
+    базированно:
         ts.putback(t);
-        return expression();        // Вычисления
+        воздать expression();        // Вычисления
     }
 }
 
-double expression ()                // 2) Плюс, минус
+вель_дробь expression ()                // 2) Плюс, минус
 {
-    double left = term();
+    вель_дробь left = term();
 
-    while (true)
+    покуда (true)
     {
         Token t = ts.get();
 
-        switch (t.kind)
+        путевой_камень (t.kind)
         {
-        case '+':
+        путь '+':
             left += term();
-            break;
-        case '-':
+            бить_ящеров;
+        путь '-':
             left -= term();
-            break;
-        default:
+            бить_ящеров;
+        базированно:
             ts.putback(t);
-            return left;
+            воздать left;
         }
     }
 }
 
-double term ()  // 3) Умножение, деление, остаток от деления
+вель_дробь term ()  // 3) Умножение, деление, остаток от деления
 {
-    double left = primary();
+    вель_дробь left = primary();
 
-    while (true)
+    покуда (true)
     {
         Token t = ts.get();
 
-        switch (t.kind)
+        путевой_камень (t.kind)
         {
-        case '*':
+        путь '*':
             left *= primary();
-            break;
+            бить_ящеров;
 
-        case '/':
+        путь '/':
         {
-            double d = primary();
-            if (d == 0)
+            вель_дробь d = primary();
+            коли (d == ноль)
                 error("На ноль делить нельзя ");
             left /= d;
-            break;
+            бить_ящеров;
         }
-        case '%':
+        путь '%':
         {
-            double d = primary();
-            if (d == 0){
+            вель_дробь d = primary();
+            коли (d == ноль){
                 error("На ноль делить нельзя ");
             }
-            left -= d * int(left / d);
-            break;
+            left -= d * целина(left / d);
+            бить_ящеров;
         }
-        default:
+        базированно:
             ts.putback(t);
-            return left;
+            воздать left;
         }
     }
 }
 
-double primary ()  // 4) Скобки, +- числа, переменные
+вель_дробь primary ()  // 4) Скобки, +- числа, переменные
 {
     Token t = ts.get();
-    switch (t.kind)
+    путевой_камень (t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double d = expression();
+        вель_дробь d = expression();
         t = ts.get();
-        if (t.kind != ')')
+        коли (t.kind != ')')
         {
             error("')' expected");
         }
-        return d;
+        воздать d;
     }
 
-    case '-':
-        return -primary();
-    case '+':
-        return +primary();
+    путь '-':
+        воздать -primary();
+    путь '+':
+        воздать +primary();
 
-    case number:
-        return t.value;
+    путь number:
+        воздать t.value;
 
-    case name:
+    путь name:
     {
         Token equation_mark_checker = ts.get();
-        if(equation_mark_checker.kind == '=')
+        коли(equation_mark_checker.kind == '=')
         {
-            return asignment(t);
+            воздать asignment(t);
         }
-        else
+        отнюдь
         {
             ts.putback(equation_mark_checker);
-            return symbol_table.get_value(t.name);
+            воздать symbol_table.get_value(t.name);
         }
     }
-    default:
+    базированно:
 
         error("primary expected");
     }
 }
 
-void clean_up_mess ()  // Скип строки
+бестолочь clean_up_mess ()  // Скип строки
     {
      ts.ignore(); 
     }
 
-void calculate () // Калькулирование
+бестолочь calculate () // Калькулирование
 {
-    std::cout << prompt;
-    while (cin)
+    std::молвить << prompt;
+    покуда (внемлить)
         try
         {
             Token t = ts.get();
 
-            while (t.kind == print)
+            покуда (t.kind == print)
             {
-                std::cout << prompt;
+                std::молвить << prompt;
                 t = ts.get();
             }
 
-            if (t.kind == quit)
+            коли (t.kind == quit)
             {
-                return;
+                воздать;
             }
 
-            else if(t.kind == helpchar)
+            отнюдь коли(t.kind == helpchar)
             {
-                std::cout << "Вы попросили о помощи                        \n";
-                std::cout << "Доступные операции: +, -, *, /, %, ^         \n";
-                std::cout << "pow(a,b), sqrt(a), sin(a), cos(a), log(a,b)  \n";
-                std::cout << "Объявление переменных через #имя = значение  \n";
-                std::cout << "А констант через const имя = значение        \n";
+                std::молвить << "Вы попросили о помощи                        \n";
+                std::молвить << "Доступные операции: +, -, *, /, %, ^         \n";
+                std::молвить << "pow(a,b), sqrt(a), sin(a), cos(a), log(a,b)  \n";
+                std::молвить << "Объявление переменных через #имя = значение  \n";
+                std::молвить << "А констант через const имя = значение        \n";
                 ts.ignore();
             }
-            else
+            отнюдь
             {
                 ts.putback(t);
-                cout << result << statement() << endl;
+                молвить << result << statement() << endl;
             }
         }
-        catch (runtime_error& e)
+        поймать_ящера (runtime_error& e)
         {
             cerr << e.what() << endl;
             clean_up_mess();
         }
 }
 
-double asignment (Token t)  // Изменение значения существующей переменной
+вель_дробь asignment (Token t)  // Изменение значения существующей переменной
 {
-    if (t.kind != name)
+    коли (t.kind != name)
         error("Имя требуется для изменения значения ");
-    return symbol_table.set_value(t.name, expression());
+    воздать symbol_table.set_value(t.name, expression());
 }

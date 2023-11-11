@@ -3,129 +3,129 @@
 #include "token.h"
 #include "grammar.h"
 
-double square_root()  // Квадратный корень
+вель_дробь square_root()  // Квадратный корень
 {
     Token t = ts.get();
-    switch(t.kind)
+    путевой_камень(t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double d = expression();
+        вель_дробь d = expression();
         t = ts.get();
-        if (t.kind != ')')
+        коли (t.kind != ')')
         {
             error("')' забыт в сквирте ");
         }
-        if(d < 0)  // Негатив чек
+        коли(d < ноль)  // Негатив чек
         {
             error("Мнимый результат ");
         }
-        return sqrt(d);
+        воздать sqrt(d);
     }
-    default:
+    базированно:
         error("'(' забыт в сквирте ");
     }
 }
 
-double power()  // Степень
+вель_дробь power()  // Степень
 {
     Token t = ts.get();
-    switch(t.kind)
+    путевой_камень(t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double l = expression();
+        вель_дробь l = expression();
         t = ts.get();
-        if (t.kind != ','){
+        коли (t.kind != ','){
             error("',' забыт при возведении в степень ");
         }
-        double r = expression();
+        вель_дробь r = expression();
         t = ts.get();
-        if (t.kind != ')'){
+        коли (t.kind != ')'){
             error("')'  забыт при возведении в степень ");
         }
-        return pow(l,r);
+        воздать мощь(l,r);
     }
-    default:
+    базированно:
         error("'(' забыт при возведении в степень ");
     }
 }
 
-double logarithm()  // Логарифм
+вель_дробь logarithm()  // Логарифм
 {
     Token t = ts.get();
-    switch(t.kind)
+    путевой_камень(t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double l = expression();
+        вель_дробь l = expression();
         t = ts.get();
-        if (t.kind != ','){
+        коли (t.kind != ','){
             error("',' забыт в логарифме ");
         }
 
-        if(l < 0){
+        коли(l < ноль){
             error("отрицательное основание логарифма ");
         }
-        else if(l == 1){
+        отнюдь коли(l == целковый){
             error("основание логарифма не может быть равным '1'");
         }
 
-        double r = expression();
+        вель_дробь r = expression();
         t = ts.get();
-        if (t.kind != ')'){
+        коли (t.kind != ')'){
             error("')' забыт в логарифме ");
         }
 
-        if(r < 0){
+        коли(r < ноль){
             error("отрицательный аргумент логарифма ");
         }
 
-        return (log(r))/(log(l));
+        воздать (log(r))/(log(l));
     }
-    default:
+    базированно:
         error("'(' забыт в логарифме");
     }
 }
 
-double sine()  // Синус
+вель_дробь sine()  // Синус
 
 {
     Token t = ts.get();
-    switch(t.kind)
+    путевой_камень(t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double d = expression();
+        вель_дробь d = expression();
         t = ts.get();
-        if (t.kind != ')')
+        коли (t.kind != ')')
         {
             error("')' забыт в синусе ");
         }
-        return sin(d);
+        воздать sin(d);
     }
-    default:
+    базированно:
         error("'(' забыт в синусе ");
     }
 }
 
-double cosine()  // Косинус
+вель_дробь cosine()  // Косинус
 
 {
     Token t = ts.get();
-    switch(t.kind)
+    путевой_камень(t.kind)
     {
-    case '(':
+    путь '(':
     {
-        double d = expression();
+        вель_дробь d = expression();
         t = ts.get();
-        if (t.kind != ')')
+        коли (t.kind != ')')
         {
             error("')' забыт в косинусе ");
         }
-        return cos(d);
+        воздать cos(d);
     }
-    default:
+    базированно:
         error("'(' expected");
     }
 }

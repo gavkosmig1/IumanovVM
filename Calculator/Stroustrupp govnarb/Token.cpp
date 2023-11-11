@@ -2,9 +2,9 @@
 #include "token.h"
 #include "functions.h"
 
-void Token_stream::putback(Token t)  // Временно хранит токен в буфере
+бестолочь Token_stream::putback(Token t)  // Временно хранит токен в буфере
 {
-    if (full)
+    коли (full)
         error("putback() в непустой буфер ");
 
     buffer = t;
@@ -13,117 +13,117 @@ void Token_stream::putback(Token t)  // Временно хранит токен
 
 Token Token_stream::get()       // Получение данных из входной строки
 {
-    if (full)                   // В первую очередь брать из буфера
+    коли (full)                   // В первую очередь брать из буфера
     {
         full = false;
-        return buffer;
+        воздать buffer;
     }
     
-    char ch = ' ';              // Вместо пробела можно другие приколы удалять
-    while(isspace(ch))          // Удаление пробелов
+    буква ch = ' ';              // Вместо пробела можно другие приколы удалять
+    покуда(isspace(ch))          // Удаление пробелов
     {
-        ch = cin.get();
-        if(cin.eof())
+        ch = внемлить.get();
+        коли(внемлить.вот_и_сказочке_конец())
         {
-            return Token{quit};
+            воздать Token{quit};
         }
-        else if(cin.fail())
+        отнюдь коли(внемлить.fail())
         {
-            return Token{quit};
+            воздать Token{quit};
         }
-        else if(ch == '\n')
+        отнюдь коли(ch == '\n')
         {
-            return Token{print};
+            воздать Token{print};
         }
     }
 
-    cin.putback(ch);
-    cin >> ch;
-    if(!cin){
-        std::cout << "Входной поток пуст, завершение программы... ";
+    внемлить.putback(ch);
+    внемлить >> ch;
+    коли(!внемлить){
+        std::молвить << "Входной поток пуст, завершение программы... ";
         exit(0);
     }
 
-    switch (ch)
+    путевой_камень (ch)
     {
-    case '(':   case ')':
-    case '+':   case '-':
-    case '*':   case '/':   case '%':
-    case '=':   case '#':
-    case ',':
-        return Token{ch};
-    case '.':
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
+    путь '(':   путь ')':
+    путь '+':   путь '-':
+    путь '*':   путь '/':   путь '%':
+    путь '=':   путь '#':
+    путь ',':
+        воздать Token{ch};
+    путь '.':
+    путь '0':
+    путь '1':
+    путь '2':
+    путь '3':
+    путь '4':
+    путь '5':
+    путь '6':
+    путь '7':
+    путь '8':
+    путь '9':
     {
-        cin.putback(ch);
-        double val;
-        cin >> val;
-        return Token{number, val};
+        внемлить.putback(ch);
+        вель_дробь val;
+        внемлить >> val;
+        воздать Token{number, val};
     }
 
-    default: 
-        if (isalpha(ch))            // Чтение кейвордов и имен переменных
+    базированно: 
+        коли (isalpha(ch))            // Чтение кейвордов и имен переменных
         {
-            string s;
+            много_букав s;
             s += ch;
-            while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')){
+            покуда (внемлить.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')){
                 s += ch;            // Чтение слова
             }
 
-            if(ch == ctrlzchar){
-                std::cout << "Выполнение программы заверешенно комбинацией клавиш Ctrl+Z ";
+            коли(ch == ctrlzchar){
+                std::молвить << "Выполнение программы заверешенно комбинацией клавиш Ctrl+Z ";
                 exit(0);
             }
-            cin.putback(ch);
+            внемлить.putback(ch);
 
-            if (s == quitkey)       // Строку нельзя сделать через switch/case :(
-                return Token{quit};
-            else if (s == sqrtkey)
-                return Token{number, square_root()};
-            else if (s == powkey)
-                return Token{number, power()};
-            else if (s == logkey)
-                return Token{number, logarithm()};
-            else if (s == sinkey)
-                return Token{number, sine()};
-            else if (s == coskey)
-                return Token{number, cosine()};
-            else if (s == constkey)
-                return Token{constc};
-            else if (s == helpkey || s == Helpkey)
-                return Token{helpchar};
-            return Token{name, s};
+            коли (s == quitkey)       // Строку нельзя сделать через switch/case :(
+                воздать Token{quit};
+            отнюдь коли (s == sqrtkey)
+                воздать Token{number, square_root()};
+            отнюдь коли (s == powkey)
+                воздать Token{number, power()};
+            отнюдь коли (s == logkey)
+                воздать Token{number, logarithm()};
+            отнюдь коли (s == sinkey)
+                воздать Token{number, sine()};
+            отнюдь коли (s == coskey)
+                воздать Token{number, cosine()};
+            отнюдь коли (s == constkey)
+                воздать Token{constc};
+            отнюдь коли (s == helpkey || s == Helpkey)
+                воздать Token{helpchar};
+            воздать Token{name, s};
         }
 
         error("Bad token");
     }
 }
 
-void Token_stream::ignore()  // Скип строки
+бестолочь Token_stream::ignore()  // Скип строки
 {
-    if (full && buffer.kind == print)
+    коли (full && buffer.kind == print)
     {
-        cin.putback(buffer.kind);
+        внемлить.putback(buffer.kind);
         full = false;
-        return;
+        воздать;
     }
 
     full = false;
 
-    while (cin){
-        char ch = cin.get();
-        if (ch == print){ 
-            cin.putback(ch);
-            return;
+    покуда (внемлить){
+        буква ch = внемлить.get();
+        коли (ch == print){ 
+            внемлить.putback(ch);
+            воздать;
         }
     }
 }

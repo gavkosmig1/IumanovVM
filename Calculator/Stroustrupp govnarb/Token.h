@@ -2,58 +2,59 @@
 #define TOKEN_H 1
 
 #include <std_lib_facilities.h>
+#include "Ве_крест_крест.h"
 
-struct Token
+семейство Token
 {
-    char kind;
-    double value;
-    string name;
+    буква kind;
+    вель_дробь value;
+    много_букав name;
 
-    Token(char ch) : kind{ch}, value{0} {}
+    Token(буква ch) : kind{ch}, value{0} {}
 
-    Token(char ch, double val) : kind{ch}, value{val} {}
+    Token(буква ch, вель_дробь val) : kind{ch}, value{val} {}
 
-    Token(char ch, string n) : kind{ch}, name{n} {}
+    Token(буква ch, много_букав n) : kind{ch}, name{n} {}
 };
 
-class Token_stream
+династия Token_stream
 {
-    bool full{false};
+    розсуд full{false};
     Token buffer{0};
 
-  public:
+  народный:
     Token_stream() {}
 
     Token get ();
-    void putback (Token t);
+    бестолочь putback (Token t);
 
-    void ignore ();
+    бестолочь ignore ();
 };
 
-const char quit = 'q';          // Какой символ обозначает тип токена
-const char print = '\n';
-const char number = '8';
-const char name = 'a';
-const char let = '#';
-const char ctrlzchar = (char)((int)(26));
-const char helpchar = 'h';
-const char constc = 'c';
+приказ_княжий буква quit = 'q';          // Какой символ обозначает тип токена
+приказ_княжий буква print = '\n';
+приказ_княжий буква number = '8';
+приказ_княжий буква name = 'a';
+приказ_княжий буква let = '#';
+приказ_княжий буква ctrlzchar = (буква)((целина)(26));
+приказ_княжий буква helpchar = 'h';
+приказ_княжий буква constc = 'c';
 
-const string prompt = "> ";     // Все кейворды
-const string result = "= ";
-const string quitkey = "exit";
-const string sqrtkey = "sqrt";  
-const string powkey = "pow";
-const string logkey = "log";
-const string sinkey = "sin";
-const string coskey = "cos";
-const string helpkey = "help";
-const string Helpkey = "Help";
-const string constkey = "const";
+приказ_княжий много_букав prompt = "> ";     // Все кейворды
+приказ_княжий много_букав result = "= ";
+приказ_княжий много_букав quitkey = "exit";
+приказ_княжий много_букав sqrtkey = "sqrt";  
+приказ_княжий много_букав powkey = "pow";
+приказ_княжий много_букав logkey = "log";
+приказ_княжий много_букав sinkey = "sin";
+приказ_княжий много_букав coskey = "cos";
+приказ_княжий много_букав helpkey = "help";
+приказ_княжий много_букав Helpkey = "Help";
+приказ_княжий много_букав constkey = "Const";
 
 extern Token_stream ts;
 
-extern bool error_flag1;
-extern bool error_flag2;
+extern розсуд error_flag1;
+extern розсуд error_flag2;
 
 #endif
