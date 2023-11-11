@@ -7,7 +7,6 @@ vector<Variable> var_table;
 Symbol_table symbol_table(var_table);
 
 double Symbol_table::get_value(const string& s)  // Получение значения переменной
-
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
