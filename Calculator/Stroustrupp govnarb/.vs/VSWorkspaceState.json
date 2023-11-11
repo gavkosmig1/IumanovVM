@@ -2,5 +2,8 @@
   "ExpandedNodes": [
     ""
   ],
-  "PreviewInSolutionExplorer": false
+  "PreviewInSolutionExplorer": false,
+  "OutputFoldersPerTargetSystem": {
+    "Локальный компьютер": []
+  }
 }

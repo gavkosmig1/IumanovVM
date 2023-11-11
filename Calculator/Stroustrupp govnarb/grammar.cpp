@@ -3,22 +3,22 @@
 #include "variable.h"
 #include "functions.h"
 
-double statement ()  // 1) Объявление или начало вычислений
+double statement ()  // 1) Р Р°Р·РґРµР»РµРЅРёРµ РІС…РѕРґР° РЅР° РѕР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С…, РєРѕРЅСЃС‚Р°РЅС‚ Рё РІС‹С‡РёСЃР»РµРЅРёСЏ
 {
     Token t = ts.get();
     switch (t.kind)
     {
     case let:
-        return declaration(false);  // Объявление неконстанты
+        return declaration(false);  // РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№
     case constc:
-        return declaration(true);  // Объявление константы
+        return declaration(true);   // РћР±СЉСЏРІР»РµРёРЅРµ РєРѕРЅСЃС‚Р°РЅС‚С‹
     default:
         ts.putback(t);
-        return expression();  // вычисления
+        return expression();        // Р’С‹С‡РёСЃР»РµРЅРёСЏ
     }
 }
 
-double expression ()  // 2) Плюс и минус
+double expression ()                // 2) РџР»СЋСЃ, РјРёРЅСѓСЃ
 {
     double left = term();
 
@@ -41,7 +41,7 @@ double expression ()  // 2) Плюс и минус
     }
 }
 
-double term ()  // 3) Умножение, деление и остаток от деления
+double term ()  // 3) РЈРјРЅРѕР¶РµРЅРёРµ, РґРµР»РµРЅРёРµ, РѕСЃС‚Р°С‚РѕРє РѕС‚ РґРµР»РµРЅРёСЏ
 {
     double left = primary();
 
@@ -59,7 +59,7 @@ double term ()  // 3) Умножение, деление и остаток от деления
         {
             double d = primary();
             if (d == 0)
-                error("division by zero");
+                error("РќР° РЅРѕР»СЊ РґРµР»РёС‚СЊ РЅРµР»СЊР·СЏ ");
             left /= d;
             break;
         }
@@ -67,7 +67,7 @@ double term ()  // 3) Умножение, деление и остаток от деления
         {
             double d = primary();
             if (d == 0){
-                error("division by zero");
+                error("РќР° РЅРѕР»СЊ РґРµР»РёС‚СЊ РЅРµР»СЊР·СЏ ");
             }
             left -= d * int(left / d);
             break;
@@ -79,7 +79,7 @@ double term ()  // 3) Умножение, деление и остаток от деления
     }
 }
 
-double primary ()  // 4) Скобки и +- числа
+double primary ()  // 4) РЎРєРѕР±РєРё, +- С‡РёСЃР»Р°, РїРµСЂРµРјРµРЅРЅС‹Рµ
 {
     Token t = ts.get();
     switch (t.kind)
@@ -109,7 +109,6 @@ double primary ()  // 4) Скобки и +- числа
         if(equation_mark_checker.kind == '=')
         {
             return asignment(t);
-            //return get_value(t.name);
         }
         else
         {
@@ -123,46 +122,37 @@ double primary ()  // 4) Скобки и +- числа
     }
 }
 
-void clean_up_mess () //ignores everything in the input stream until printkey appears ('\n')
+void clean_up_mess ()  // РЎРєРёРї СЃС‚СЂРѕРєРё
     {
      ts.ignore(); 
     }
 
-void calculate () //performs the program cycle
+void calculate () // РљР°Р»СЊРєСѓР»РёСЂРѕРІР°РЅРёРµ
 {
     std::cout << prompt;
     while (cin)
         try
         {
             Token t = ts.get();
+
             while (t.kind == print)
             {
                 std::cout << prompt;
                 t = ts.get();
             }
+
             if (t.kind == quit)
             {
                 return;
             }
+
             else if(t.kind == helpchar)
             {
-                std::cout << "You have typed \"help\" or \"Help\"!\n\n";
-                std::cout << "available operations:\n\n";
-                std::cout << "sum:                                         \"a+b = c\"\n";
-                std::cout << "substraction:                                \"a-b = c\"\n";
-                std::cout << "product:                                     \"a*b = c\"\n";
-                std::cout << "division:                                    \"a/b = c\"\n";
-                std::cout << "mod division:                                \"a%b = c\"\n";
-                std::cout << "raising to the power:                        \"a^b = c\"\n";
-                std::cout << "calculating factorial of a positive integer:  \"a! = b\"\n\n";
-                std::cout << "available functions:\n\n";
-                std::cout << "raising to the power via function:   \"pow(a,b) = c\"\n";
-                std::cout << "calculating square root of a number:  \"sqrt(a) = b\"\n";
-                std::cout << "calculating sine:                      \"sin(a) = c\"\n";
-                std::cout << "calculating cosine:                    \"cos(a) = b\"\n";
-                std::cout << "calculating logarithm: a-base, b-val \"log(a,b) = c\"\n\n";
-                std::cout << "to declare a variable use \"#a = value\"\n";
-                std::cout << "to declare a constant use \"const a = value\"\n\n";
+                std::cout << "Р’С‹ РїРѕРїСЂРѕСЃРёР»Рё Рѕ РїРѕРјРѕС‰Рё                        \n";
+                std::cout << "Р”РѕСЃС‚СѓРїРЅС‹Рµ РѕРїРµСЂР°С†РёРё: +, -, *, /, %, ^         \n";
+                std::cout << "pow(a,b), sqrt(a), sin(a), cos(a), log(a,b)  \n";
+                std::cout << "РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… С‡РµСЂРµР· #РёРјСЏ = Р·РЅР°С‡РµРЅРёРµ  \n";
+                std::cout << "Рђ РєРѕРЅСЃС‚Р°РЅС‚ С‡РµСЂРµР· const РёРјСЏ = Р·РЅР°С‡РµРЅРёРµ        \n";
                 ts.ignore();
             }
             else
@@ -178,19 +168,9 @@ void calculate () //performs the program cycle
         }
 }
 
-double asignment (Token t)  // Changes value of a variable
+double asignment (Token t)  // РР·РјРµРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ РїРµСЂРµРјРµРЅРЅРѕР№
 {
-  if (t.kind != name)
-    error("name expected in asignment");
-  string va = t.name;
-  if (!symbol_table.is_declared(va))
-    error(va, " is not declared");
-  for (size_t i = 0; i < (int)symbol_table.v.size(); ++i)
-  {
-    if (symbol_table.v[i].name == va)
-    {
-      return symbol_table.set_value(va, expression());
-    }
-  }
-  error(va, " is not declared");
+    if (t.kind != name)
+        error("РРјСЏ С‚СЂРµР±СѓРµС‚СЃСЏ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ ");
+    return symbol_table.set_value(t.name, expression());
 }

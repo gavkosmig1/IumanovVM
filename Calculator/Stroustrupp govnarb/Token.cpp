@@ -2,25 +2,25 @@
 #include "token.h"
 #include "functions.h"
 
-void Token_stream::putback(Token t)  // Ñîõğàíåíèå òîêåíà â áóôåğ
+void Token_stream::putback(Token t)  // Ğ’Ñ€ĞµĞ¼ĞµĞ½Ğ½Ğ¾ Ñ…Ñ€Ğ°Ğ½Ğ¸Ñ‚ Ñ‚Ğ¾ĞºĞµĞ½ Ğ² Ğ±ÑƒÑ„ĞµÑ€Ğµ
 {
     if (full)
-        error("putback() into a full buffer ");
+        error("putback() Ğ² Ğ½ĞµĞ¿ÑƒÑÑ‚Ğ¾Ğ¹ Ğ±ÑƒÑ„ĞµÑ€ ");
 
     buffer = t;
     full = true;
 }
 
-Token Token_stream::get()  // ×òåíèå ñèìâîëà ñ ïîòîêà âõîäà
+Token Token_stream::get()       // ĞŸĞ¾Ğ»ÑƒÑ‡ĞµĞ½Ğ¸Ğµ Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ… Ğ¸Ğ· Ğ²Ñ…Ğ¾Ğ´Ğ½Ğ¾Ğ¹ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
 {
-    if (full)  // ×òåíèå ñ áóôåğà
+    if (full)                   // Ğ’ Ğ¿ĞµÑ€Ğ²ÑƒÑ Ğ¾Ñ‡ĞµÑ€ĞµĞ´ÑŒ Ğ±Ñ€Ğ°Ñ‚ÑŒ Ğ¸Ğ· Ğ±ÑƒÑ„ĞµÑ€Ğ°
     {
         full = false;
         return buffer;
     }
     
-    char ch = ' ';
-    while(isspace(ch))  // Ñêèï ïğîáåëîâ
+    char ch = ' ';              // Ğ’Ğ¼ĞµÑÑ‚Ğ¾ Ğ¿Ñ€Ğ¾Ğ±ĞµĞ»Ğ° Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ Ğ´Ñ€ÑƒĞ³Ğ¸Ğµ Ğ¿Ñ€Ğ¸ĞºĞ¾Ğ»Ñ‹ ÑƒĞ´Ğ°Ğ»ÑÑ‚ÑŒ
+    while(isspace(ch))          // Ğ£Ğ´Ğ°Ğ»ĞµĞ½Ğ¸Ğµ Ğ¿Ñ€Ğ¾Ğ±ĞµĞ»Ğ¾Ğ²
     {
         ch = cin.get();
         if(cin.eof())
@@ -40,9 +40,10 @@ Token Token_stream::get()  // ×òåíèå ñèìâîëà ñ ïîòîêà âõîäà
     cin.putback(ch);
     cin >> ch;
     if(!cin){
-        std::cout << "Ğàáîòà ñ êàëüêóëÿòîğîì îêîí÷åíà ";
+        std::cout << "Ğ’Ñ…Ğ¾Ğ´Ğ½Ğ¾Ğ¹ Ğ¿Ğ¾Ñ‚Ğ¾Ğº Ğ¿ÑƒÑÑ‚, Ğ·Ğ°Ğ²ĞµÑ€ÑˆĞµĞ½Ğ¸Ğµ Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¼Ñ‹... ";
         exit(0);
     }
+
     switch (ch)
     {
     case '(':   case ')':
@@ -70,20 +71,21 @@ Token Token_stream::get()  // ×òåíèå ñèìâîëà ñ ïîòîêà âõîäà
     }
 
     default: 
-        if (isalpha(ch)) //checks for key words
+        if (isalpha(ch))            // Ğ§Ñ‚ĞµĞ½Ğ¸Ğµ ĞºĞµĞ¹Ğ²Ğ¾Ñ€Ğ´Ğ¾Ğ² Ğ¸ Ğ¸Ğ¼ĞµĞ½ Ğ¿ĞµÑ€ĞµĞ¼ĞµĞ½Ğ½Ñ‹Ñ…
         {
             string s;
-            s += ch; //if while doesn't activate
+            s += ch;
             while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')){
-                s += ch;
+                s += ch;            // Ğ§Ñ‚ĞµĞ½Ğ¸Ğµ ÑĞ»Ğ¾Ğ²Ğ°
             }
+
             if(ch == ctrlzchar){
-                std::cout << "Goodbye :)";
+                std::cout << "Ğ’Ñ‹Ğ¿Ğ¾Ğ»Ğ½ĞµĞ½Ğ¸Ğµ Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¼Ñ‹ Ğ·Ğ°Ğ²ĞµÑ€ĞµÑˆĞµĞ½Ğ½Ğ¾ ĞºĞ¾Ğ¼Ğ±Ğ¸Ğ½Ğ°Ñ†Ğ¸ĞµĞ¹ ĞºĞ»Ğ°Ğ²Ğ¸Ñˆ Ctrl+Z ";
                 exit(0);
             }
             cin.putback(ch);
-            
-            if (s == quitkey)
+
+            if (s == quitkey)       // Ğ¡Ñ‚Ñ€Ğ¾ĞºÑƒ Ğ½ĞµĞ»ÑŒĞ·Ñ ÑĞ´ĞµĞ»Ğ°Ñ‚ÑŒ Ñ‡ĞµÑ€ĞµĞ· switch/case :(
                 return Token{quit};
             else if (s == sqrtkey)
                 return Token{number, square_root()};
@@ -106,7 +108,7 @@ Token Token_stream::get()  // ×òåíèå ñèìâîëà ñ ïîòîêà âõîäà
     }
 }
 
-void Token_stream::ignore() //ignores everything until printkey appears ('\n')
+void Token_stream::ignore()  // Ğ¡ĞºĞ¸Ğ¿ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
 {
     if (full && buffer.kind == print)
     {

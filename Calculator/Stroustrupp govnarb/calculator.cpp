@@ -7,8 +7,8 @@
 int main ()
 try
 {
-    std::cout << "Hello, welcome to the calculator!\n";
-    std::cout << "Type \"help\" or \"Help\" if you want to know available features\n\n";
+    std::cout << "Калькулятор by Юманов гавкошмыг Василий Михайлович                \n";
+    std::cout << "Чтобы попросить о помощи, введите help                            \n";
 
     symbol_table.define_name("pi", 3.141592653589793, true);
     symbol_table.define_name("e", 2.718281828459045, true);
@@ -18,11 +18,11 @@ try
 }
 catch (exception& e)
 {
-    cerr << "exception: " << e.what() << endl;
+    cerr << "Ошибка: " << e.what() << endl;
     return 1;
 }
 catch (...)
 {
-    cerr << "Oops, unknown exception" << endl;
+    cerr << "Неизвестная ошибка " << endl;
     return 2;
 }
