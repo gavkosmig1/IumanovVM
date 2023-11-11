@@ -2,8 +2,8 @@
 #include "functions.h"
 #include "token.h"
 #include "grammar.h"
-                     //Checks if the expression in brackets are correct
-double square_root() //after "sqrt" key was typed and calculates it
+
+double square_root()  // Квадратный корень
 {
     Token t = ts.get();
     switch(t.kind)
@@ -14,21 +14,20 @@ double square_root() //after "sqrt" key was typed and calculates it
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' expected");
+            error("')' забыт в сквирте ");
         }
-        if(d < 0) //Checks if the number inside a root is negative
+        if(d < 0)  // Негатив чек
         {
-            error("can't get a square root of a negative number");
+            error("Мнимый результат ");
         }
         return sqrt(d);
     }
     default:
-        error("'(' expected");
+        error("'(' забыт в сквирте ");
     }
 }
 
-               //Checks if two expressions within the brackets that are separated by a comma are correct
-double power() //after "pow" key was typed and calculates it
+double power()  // Степень
 {
     Token t = ts.get();
     switch(t.kind)
@@ -38,23 +37,21 @@ double power() //after "pow" key was typed and calculates it
         double l = expression();
         t = ts.get();
         if (t.kind != ','){
-            error("',' expected");
+            error("',' забыт при возведении в степень ");
         }
         double r = expression();
         t = ts.get();
         if (t.kind != ')'){
-            error("')' expected");
+            error("')'  забыт при возведении в степень ");
         }
         return pow(l,r);
     }
     default:
-        error("'(' expected");
+        error("'(' забыт при возведении в степень ");
     }
 }
- 
-                   //Checks if two expressions within the brackets that are separated by a comma are correct
-double logarithm() //after "log" key was typed and calculates it
 
+double logarithm()  // Логарифм
 {
     Token t = ts.get();
     switch(t.kind)
@@ -64,35 +61,34 @@ double logarithm() //after "log" key was typed and calculates it
         double l = expression();
         t = ts.get();
         if (t.kind != ','){
-            error("',' expected");
+            error("',' забыт в логарифме ");
         }
 
         if(l < 0){
-            error("logarithm indicator can't be a negative number");
+            error("отрицательное основание логарифма ");
         }
         else if(l == 1){
-            error("logarithm indicator can't be equal to '1'");
+            error("основание логарифма не может быть равным '1'");
         }
 
         double r = expression();
         t = ts.get();
         if (t.kind != ')'){
-            error("')' expected");
+            error("')' забыт в логарифме ");
         }
 
         if(r < 0){
-            error("logarithm value can't be a negative number");
+            error("отрицательный аргумент логарифма ");
         }
 
         return (log(r))/(log(l));
     }
     default:
-        error("'(' expected");
+        error("'(' забыт в логарифме");
     }
 }
 
-               //Checks if the expression in brackets are correct
-double sine()  //after "sine" key was typed and calculates it
+double sine()  // Синус
 
 {
     Token t = ts.get();
@@ -104,17 +100,16 @@ double sine()  //after "sine" key was typed and calculates it
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' expected");
+            error("')' забыт в синусе ");
         }
         return sin(d);
     }
     default:
-        error("'(' expected");
+        error("'(' забыт в синусе ");
     }
 }
 
-                 //Checks if the expression in brackets are correct
-double cosine()  //after "cosine" key was typed and calculates it
+double cosine()  // Косинус
 
 {
     Token t = ts.get();
@@ -126,19 +121,11 @@ double cosine()  //after "cosine" key was typed and calculates it
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' expected");
+            error("')' забыт в косинусе ");
         }
         return cos(d);
     }
     default:
         error("'(' expected");
     }
-}
-
-int factorial(int n) //just calculates factorial
-{
-    if(n == 0) return 1;
-    int ans = 1;
-    for(int i = 1; i <= n; i++) ans *= i;
-    return ans;
 }

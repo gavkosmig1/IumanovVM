@@ -1,0 +1,8 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Локальный компьютер": [
+      "OgoCalc\\calculator\\out\\build\\x64-Debug",
+      "OgoCalc\\calculator\\out\\install\\x64-Debug"
+    ]
+  }
+}

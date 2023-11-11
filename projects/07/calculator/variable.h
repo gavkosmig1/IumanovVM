@@ -12,23 +12,23 @@ struct Variable
     Variable(string n, double v, bool isc) : name{n}, value{v}, isconstant{isc} {}
 };
 
-class Symbol_table  // Работа с хранилищем переменных
+class Symbol_table  // РҐСЂР°РЅРёР»РёС‰Рµ СЌР»РµРјРµРЅС‚РѕРІ
 {
     public:
-        vector<Variable> v;  // Хранилище переменных
+        vector<Variable> v;  // РЎР°РјРѕ С…СЂР°РЅРёР»РёС‰Рµ
 
         Symbol_table(vector<Variable> v_t) : v{v_t} {}
 
-        double get_value (const string& s);  // Получение значения переменной
+        double define_name (const string& var, double val, bool icg);  // Р—Р°РїРёСЃСЊ РїРµСЂРµРјРµРЅРЅРѕР№
 
-        bool is_declared (const string& s);  // Занято ли имя переменной чек
+        double get_value (const string& s);  // РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№
 
-        double set_value (const string& s, double d);  // Перезапись переменной неконстанты
+        bool is_declared (const string& s);  // Р—Р°РЅСЏС‚Рѕ Р»Рё РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ С‡РµРє
 
-        double define_name (const string& var, double val, bool icg);  // Запись переменной
+        double set_value (const string& s, double d);  // РџРµСЂРµР·Р°РїРёСЃСЊ РїРµСЂРµРјРµРЅРЅРѕР№
 };
 
-double declaration (bool is_const);  // Объявление переменной
+double declaration (bool is_const);  // РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№
 
 extern vector<Variable> var_table;
 extern Symbol_table symbol_table;

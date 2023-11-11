@@ -16,7 +16,7 @@ struct Token
     Token(char ch, string n) : kind{ch}, name{n} {}
 };
 
-class Token_stream //Token_stream class
+class Token_stream
 {
     bool full{false};
     Token buffer{0};
@@ -30,26 +30,26 @@ class Token_stream //Token_stream class
     void ignore ();
 };
 
-const char quit = 'q';                      //
-const char print = '\n';                    //
-const char number = '8';                    // all the key
-const char name = 'a';                      // characters
-const char let = '#';                       //
-const char ctrlzchar = (char)((int)(26));   // ctrl+z char
-const char helpchar = 'h';                  //
-const char constc = 'c';                    //
+const char quit = 'q';          // Какой символ обозначает тип токена
+const char print = '\n';
+const char number = '8';
+const char name = 'a';
+const char let = '#';
+const char ctrlzchar = (char)((int)(26));
+const char helpchar = 'h';
+const char constc = 'c';
 
-const string prompt = "> ";     //
-const string result = "= ";     //
-const string quitkey = "exit";  //
-const string sqrtkey = "sqrt";  //  
-const string powkey = "pow";    //
-const string logkey = "log";    //  all the key words 
-const string sinkey = "sin";    //
-const string coskey = "cos";    //
-const string helpkey = "help";  //
-const string Helpkey = "Help";  //
-const string constkey = "const";//
+const string prompt = "> ";     // Все кейворды
+const string result = "= ";
+const string quitkey = "exit";
+const string sqrtkey = "sqrt";  
+const string powkey = "pow";
+const string logkey = "log";
+const string sinkey = "sin";
+const string coskey = "cos";
+const string helpkey = "help";
+const string Helpkey = "Help";
+const string constkey = "const";
 
 extern Token_stream ts;
 

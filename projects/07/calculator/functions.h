@@ -3,11 +3,11 @@
 
 #include <std_lib_facilities.h>
 
-double square_root();    //
-double power();          //
-double logarithm();      // functions
-double sine();           // declarations
-double cosine();         //
-int factorial(int n);    //
+double square_root();
+double power();
+double logarithm();
+double sine();
+double cosine();
+int factorial(int n);
 
 #endif

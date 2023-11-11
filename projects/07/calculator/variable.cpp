@@ -6,7 +6,7 @@
 vector<Variable> var_table;
 Symbol_table symbol_table(var_table);
 
-double Symbol_table::get_value(const string& s)  // Получение значения переменной по имени
+double Symbol_table::get_value(const string& s)  // РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№
 
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
@@ -16,10 +16,10 @@ double Symbol_table::get_value(const string& s)  // Получение значения переменно
             return Symbol_table::v[i].value;
         }
     }
-    error("get_value of undefined Variabe ", s);
+    error("Р”Р°РЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ ", s);
 }
 
-bool Symbol_table::is_declared(const string& s)  // Занято ли имя переменной чек
+bool Symbol_table::is_declared(const string& s)  // Р—Р°РЅСЏС‚Рѕ Р»Рё РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ С‡РµРє
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
@@ -31,42 +31,41 @@ bool Symbol_table::is_declared(const string& s)  // Занято ли имя переменной чек
     return false;
 }
 
-double Symbol_table::set_value(const string& s, double d)  // Перезапись переменной неконстанты
+double Symbol_table::set_value(const string& s, double d)  // РџРµСЂРµР·Р°РїРёСЃСЊ РїРµСЂРµРјРµРЅРЅРѕР№
 {
     for (size_t i = 0; i < Symbol_table::v.size(); ++i)
     {
-        if ((Symbol_table::v[i].name == s) && (!(Symbol_table::v[i].isconstant)))
+        if ((!(Symbol_table::v[i].isconstant)) && (Symbol_table::v[i].name == s))
         {
             Symbol_table::v[i].value = d;
             return d;
         }
     }
-    error("cant set_value() of constant ", s);
+    error("РџРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РЅР°Р№РґРµРЅР° РёР»Рё СЏРІР»СЏРµС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РѕР№ ", s);
 }
 
-double declaration (bool is_const)  // Объявление переменной
+double declaration (bool is_const)  // РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№
 {
     Token t = ts.get();
     if (t.kind != name)
-        error("declaration needs name ");
+        error("РћР±СЉСЏРІР»РµРЅРёРµ Р±РµР· РёРјРµРЅРё ");
 
     string var = t.name;
     if (symbol_table.is_declared(var))
-        error(var, "Variale already exists ");
+        error(var, "РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ Р·Р°РЅСЏС‚Рѕ ");
 
     t = ts.get();
     if (t.kind != '=')
-        error("declaration needs '=' ", var);
+        error("''=' Р·Р°Р±С‹С‚ РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№ ", var);
 
     return symbol_table.define_name(var, expression(), is_const);
 }
 
-double Symbol_table::define_name(const string& var, double val, bool icg)  // Запись переменной
-
+double Symbol_table::define_name(const string& var, double val, bool icg)  // Р—Р°РїРёСЃСЊ РїРµСЂРµРјРµРЅРЅРѕР№
 {
     if (Symbol_table::is_declared(var))
     {
-        error(var, "Variable already exists ");
+        error(var, "РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ Р·Р°РЅСЏС‚Рѕ ");
     }
     Symbol_table::v.push_back(Variable{ var, val, icg });
     return val;
