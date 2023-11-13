@@ -2,8 +2,8 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <lib/Graph_lib/Graph.h>
-#include <lib/Graph_lib/Simple_window.h>
+#include <Graph_lib/Graph.h>
+#include <Graph_lib/Simple_window.h>
 
 using namespace Graph_lib;
 
