@@ -7,8 +7,9 @@
 int main ()
 try
 {
-    std::cout << "Калькулятор by Юманов гавкошмыг Василий Михайлович                \n";
-    std::cout << "Чтобы попросить о помощи, введите help                            \n";
+    setlocale(LC_ALL, "Russian");
+    std::cout << "Калькулятор by Юманов Василий Михайлович  \n";
+    std::cout << "Чтобы попросить о помощи, введите help    \n";
 
     symbol_table.define_name("pi", 3.141592653589793, true);
     symbol_table.define_name("e", 2.718281828459045, true);
