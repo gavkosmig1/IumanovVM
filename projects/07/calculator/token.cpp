@@ -1,6 +1,6 @@
-#include <std_lib_facilities.h>
 #include "token.h"
 #include "functions.h"
+#include <std_lib_facilities.h>
 
 void Token_stream::putback(Token t)  // Временно хранит токен в буфере
 {
@@ -11,27 +11,27 @@ void Token_stream::putback(Token t)  // Временно хранит токен
     full = true;
 }
 
-Token Token_stream::get()       // Получение данных из входной строки
+Token Token_stream::get()  // Получение данных из входной строки
 {
-    if (full)                   // В первую очередь брать из буфера
+    if (full)  // В первую очередь брать из буфера
     {
         full = false;
         return buffer;
     }
-    
-    char ch = ' ';              // Вместо пробела можно другие приколы удалять
-    while(isspace(ch))          // Удаление пробелов
+
+    char ch = ' ';       // Вместо пробела можно другие приколы удалять
+    while (isspace(ch))  // Удаление пробелов
     {
         ch = cin.get();
-        if(cin.eof())
+        if (cin.eof())
         {
             return Token{quit};
         }
-        else if(cin.fail())
+        else if (cin.fail())
         {
             return Token{quit};
         }
-        else if(ch == '\n')
+        else if (ch == '\n')
         {
             return Token{print};
         }
@@ -39,17 +39,23 @@ Token Token_stream::get()       // Получение данных из вход
 
     cin.putback(ch);
     cin >> ch;
-    if(!cin){
+    if (!cin)
+    {
         std::cout << "Входной поток пуст, завершение программы... ";
         exit(0);
     }
 
     switch (ch)
     {
-    case '(':   case ')':
-    case '+':   case '-':
-    case '*':   case '/':   case '%':
-    case '=':   case '#':
+    case '(':
+    case ')':
+    case '+':
+    case '-':
+    case '*':
+    case '/':
+    case '%':
+    case '=':
+    case '#':
     case ',':
         return Token{ch};
     case '.':
@@ -70,22 +76,24 @@ Token Token_stream::get()       // Получение данных из вход
         return Token{number, val};
     }
 
-    default: 
-        if (isalpha(ch))            // Чтение кейвордов и имен переменных
+    default:
+        if (isalpha(ch))  // Чтение кейвордов и имен переменных
         {
             string s;
             s += ch;
-            while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')){
-                s += ch;            // Чтение слова
+            while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_'))
+            {
+                s += ch;  // Чтение слова
             }
 
-            if(ch == ctrlzchar){
+            if (ch == ctrlzchar)
+            {
                 std::cout << "Выполнение программы заверешенно комбинацией клавиш Ctrl+Z ";
                 exit(0);
             }
             cin.putback(ch);
 
-            if (s == quitkey)       // Строку нельзя сделать через switch/case :(
+            if (s == quitkey)  // Строку нельзя сделать через switch/case :(
                 return Token{quit};
             else if (s == sqrtkey)
                 return Token{number, square_root()};
@@ -119,9 +127,11 @@ void Token_stream::ignore()  // Скип строки
 
     full = false;
 
-    while (cin){
+    while (cin)
+    {
         char ch = cin.get();
-        if (ch == print){ 
+        if (ch == print)
+        {
             cin.putback(ch);
             return;
         }

@@ -21,7 +21,7 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-ColumnLimit:       76
+ColumnLimit:       120
 EmptyLineBeforeAccessModifier: Always
 LineEnding:        LF
 MaxEmptyLinesToKeep: 1
@@ -38,4 +38,5 @@ SpaceBeforeParensOptions:
 SpaceAroundPointerQualifiers: Default
 SeparateDefinitionBlocks: Always
 SpacesBeforeTrailingComments: 2
-TabWidth: 2
+TabWidth: 4
+IndentWidth: 4

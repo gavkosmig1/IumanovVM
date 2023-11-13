@@ -1,12 +1,12 @@
-#include <std_lib_facilities.h>
 #include "functions.h"
-#include "token.h"
 #include "grammar.h"
+#include "token.h"
+#include <std_lib_facilities.h>
 
-double square_root()  // Квадратный корень
+double square_root ()  // Квадратный корень
 {
     Token t = ts.get();
-    switch(t.kind)
+    switch (t.kind)
     {
     case '(':
     {
@@ -16,7 +16,7 @@ double square_root()  // Квадратный корень
         {
             error("')' забыт в сквирте ");
         }
-        if(d < 0)  // Негатив чек
+        if (d < 0)  // Негатив чек
         {
             error("Мнимый результат ");
         }
@@ -27,72 +27,79 @@ double square_root()  // Квадратный корень
     }
 }
 
-double power()  // Степень
+double power ()  // Степень
 {
     Token t = ts.get();
-    switch(t.kind)
+    switch (t.kind)
     {
     case '(':
     {
         double l = expression();
         t = ts.get();
-        if (t.kind != ','){
+        if (t.kind != ',')
+        {
             error("',' забыт при возведении в степень ");
         }
         double r = expression();
         t = ts.get();
-        if (t.kind != ')'){
+        if (t.kind != ')')
+        {
             error("')'  забыт при возведении в степень ");
         }
-        return pow(l,r);
+        return pow(l, r);
     }
     default:
         error("'(' забыт при возведении в степень ");
     }
 }
 
-double logarithm()  // Логарифм
+double logarithm ()  // Логарифм
 {
     Token t = ts.get();
-    switch(t.kind)
+    switch (t.kind)
     {
     case '(':
     {
         double l = expression();
         t = ts.get();
-        if (t.kind != ','){
+        if (t.kind != ',')
+        {
             error("',' забыт в логарифме ");
         }
 
-        if(l < 0){
+        if (l < 0)
+        {
             error("отрицательное основание логарифма ");
         }
-        else if(l == 1){
+        else if (l == 1)
+        {
             error("основание логарифма не может быть равным '1'");
         }
 
         double r = expression();
         t = ts.get();
-        if (t.kind != ')'){
+        if (t.kind != ')')
+        {
             error("')' забыт в логарифме ");
         }
 
-        if(r < 0){
+        if (r < 0)
+        {
             error("отрицательный аргумент логарифма ");
         }
 
-        return (log(r))/(log(l));
+        return (log(r)) / (log(l));
     }
     default:
         error("'(' забыт в логарифме");
     }
 }
 
-double sine()  // Синус
+double sine ()  // Синус
 
 {
     Token t = ts.get();
-    switch(t.kind)
+    switch (t.kind)
     {
     case '(':
     {
@@ -109,11 +116,11 @@ double sine()  // Синус
     }
 }
 
-double cosine()  // Косинус
+double cosine ()  // Косинус
 
 {
     Token t = ts.get();
-    switch(t.kind)
+    switch (t.kind)
     {
     case '(':
     {
@@ -126,6 +133,6 @@ double cosine()  // Косинус
         return cos(d);
     }
     default:
-        error("'(' expected");
+        error("'(' забыт в косинусе");
     }
 }
