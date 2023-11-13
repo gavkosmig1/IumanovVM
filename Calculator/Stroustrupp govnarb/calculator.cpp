@@ -11,9 +11,9 @@
     std::молвить << "Калькулятор by Юманов гавкошмыг Василий Михайлович                \n";
     std::молвить << "Чтобы попросить о помощи, введите help                            \n";
 
-    symbol_table.define_name("pi", 3.141592653589793, true);
-    symbol_table.define_name("e", 2.718281828459045, true);
-    symbol_table.define_name("k", 1000, true);
+    symbol_table.define_name("pi", 3.141592653589793, правда);
+    symbol_table.define_name("e", 2.718281828459045, правда);
+    symbol_table.define_name("k", 1000, правда);
 
     calculate();
 }

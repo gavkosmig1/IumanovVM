@@ -19,7 +19,7 @@
 
 династия Token_stream
 {
-    розсуд full{false};
+    розсуд full{кривда};
     Token buffer{0};
 
   народный:
@@ -52,9 +52,9 @@
 приказ_княжий много_букав Helpkey = "Help";
 приказ_княжий много_букав constkey = "Const";
 
-extern Token_stream ts;
+завоз Token_stream ts;
 
-extern розсуд error_flag1;
-extern розсуд error_flag2;
+завоз розсуд error_flag1;
+завоз розсуд error_flag2;
 
 #endif

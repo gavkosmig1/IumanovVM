@@ -8,14 +8,14 @@
         error("putback() в непустой буфер ");
 
     buffer = t;
-    full = true;
+    full = правда;
 }
 
 Token Token_stream::get()       // Получение данных из входной строки
 {
     коли (full)                   // В первую очередь брать из буфера
     {
-        full = false;
+        full = кривда;
         воздать buffer;
     }
     
@@ -113,11 +113,11 @@ Token Token_stream::get()       // Получение данных из вход
     коли (full && buffer.kind == print)
     {
         внемлить.putback(buffer.kind);
-        full = false;
+        full = кривда;
         воздать;
     }
 
-    full = false;
+    full = кривда;
 
     покуда (внемлить){
         буква ch = внемлить.get();

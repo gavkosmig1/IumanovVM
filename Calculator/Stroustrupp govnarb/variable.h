@@ -32,7 +32,7 @@
 вель_дробь declaration (розсуд is_const);  // Объявление переменной
 // Не затрагивает символьную таблицу и просто ищет ошибки
 
-extern склад var_table;
-extern Symbol_table symbol_table;
+завоз склад var_table;
+завоз Symbol_table symbol_table;
 
 #endif
