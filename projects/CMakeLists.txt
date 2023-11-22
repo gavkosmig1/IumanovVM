@@ -22,4 +22,4 @@ add_subdirectory(07/calculator)
 # add_subdirectory(ch13/fibonacci_spiral)
 # add_subdirectory(ch13/hexagon_tile)
 
-add_subdirectory(least_squares)
+# add_subdirectory(least_squares)
