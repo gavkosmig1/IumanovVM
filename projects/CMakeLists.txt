@@ -10,7 +10,7 @@ include_directories(
     ${LIB_DIR}
 )
 
-add_subdirectory(07/calculator)
+# add_subdirectory(07/calculator)
 
 # add_subdirectory(08/vec)
 # add_subdirectory(08/logic_elements)
