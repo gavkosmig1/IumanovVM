@@ -1,93 +1,240 @@
 #include "level_gen.h"
 #include "settings.h"
+#include <cmath>
+#include <ctime>
+#include <random>
 
-vector<Circle*> HugeObstacles;
-vector<Circle*> MediumObstacles;
-vector<Circle*> SmallObstacles;
+using namespace Graph_lib;
 
+vector<Circle*> Obstacles;
 vector<Circle*> Players;
 
+// random tech
+void initGenerator (PRNG& generator)  // generates seed for random
+{
+    const unsigned seed = unsigned(std::time(nullptr));
+    generator.engine.seed(seed);  // Получение случайного зерна для рандома
+}
 
-void HugeObsSpawn() {   // adds obstacles to HugeObstacles
-    for (size_t i = 0; i < NumOfHugeObs; ++i) {
-        Point Center {static_cast<int>(pow(Graph_lib::randint(static_cast<int>(pow(FieldLength, HugeObsPower))), 1/HugeObsPower)), 
-                    static_cast<int>(pow(Graph_lib::randint(static_cast<int>(pow(FieldWidth, HugeObsPower))), 1/HugeObsPower))};
-        int Radius = Graph_lib::randint(HugeObsMinRad, HugeObsMaxRad);
-        
-        Circle* Obstacle = new Circle {Center, Radius};
-        (*Obstacle).set_fill_color(Color::black);
-        HugeObstacles.push_back(Obstacle);
+unsigned random (PRNG& generator, unsigned minValue, unsigned maxValue)  // gives random ints
+{
+    // Создаётся распределение
+    std::uniform_int_distribution<unsigned> distribution(minValue, maxValue);
+    // Вычисляется число, вызвав распределение как функцию, передав генератор произвольных чисел аргументом
+    return distribution(generator.engine);
+}
+
+void IntroduceRandom ()  // shortcut for initGenerator
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+}
+
+// obstacles generation
+Point NotsoRandomPoint (double Power)  // Point "Power" far away from the center
+{
+    PRNG generator;  // How to make IntroduceGenerator() ?
+    initGenerator(generator);
+    srand(time(NULL));
+
+    int xsign = (rand() % 2 == 0) ? 1 : -1;
+    int ysign = (rand() % 2 == 0) ? 1 : -1;
+    return Point{static_cast<int>(pow(random(generator, SpawnObsWallMinDist,
+                                             static_cast<int>(pow((FieldLength - SpawnObsWallMinDist) / 2, Power))),
+                                      1 / Power)) *
+                     xsign,
+                 static_cast<int>(pow(random(generator, SpawnObsWallMinDist,
+                                             static_cast<int>(pow((FieldWidth - SpawnObsWallMinDist) / 2, Power))),
+                                      1 / Power)) *
+                     ysign};
+}
+
+void HugeObsSpawn ()  // adds obstacles to HugeObstacles
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+
+    for (int i = 0; i < NumOfHugeObs; ++i)
+    {
+        Point Center{NotsoRandomPoint(HugeObsPower)};
+        int Radius = random(generator, HugeObsMinRad, HugeObsMaxRad);
+        Circle* Obstacle = new Circle{Center, Radius};
+        (*Obstacle).set_fill_color(HugeObsColor);
+        Obstacles.push_back(Obstacle);
     }
 }
 
-void MediumObsSpawn() { // adds obstacles to MediumObstacles
-    for (size_t i = 0; i < NumOfMediumObs; ++i) {
-        Point Center {static_cast<int>(pow(Graph_lib::randint(static_cast<int>(pow(FieldLength, MediumObsPower))), 1/MediumObsPower)), 
-                    static_cast<int>(pow(Graph_lib::randint(static_cast<int>(pow(FieldWidth, MediumObsPower))), 1/MediumObsPower))};
-        int Radius = Graph_lib::randint(MediumObsMinRad, MediumObsMaxRad);
-        
-        Circle* Obstacle = new Circle {Center, Radius};
-        (*Obstacle).set_fill_color(Color::black);
-
-        MediumObstacles.push_back(Obstacle);
+void MediumObsSpawn ()  // adds obstacles to MediumObstacles
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+    for (int i = 0; i < NumOfMediumObs; ++i)
+    {
+        Point Center{NotsoRandomPoint(MediumObsPower)};
+        int Radius = random(generator, MediumObsMinRad, MediumObsMaxRad);
+        Circle* Obstacle = new Circle{Center, Radius};
+        (*Obstacle).set_fill_color(MediumObsColor);
+        Obstacles.push_back(Obstacle);
     }
 }
 
-void SmallObsSpawn() {  // adds obstacles to SmallObstacles
-    for (size_t i = 0; i < NumOfSmallObs; ++i) {
-        Point Center {Graph_lib::randint(FieldLength), Graph_lib::randint(FieldWidth)};
-        int Radius = Graph_lib::randint(SmallObsMinRad, SmallObsMaxRad);
-
-        Circle* Obstacle = new Circle {Center, Radius};
-        (*Obstacle).set_fill_color(Color::black);
-
-        SmallObstacles.push_back(Obstacle);
-    }
+void SmallObsSpawn ()  // adds obstacles to SmallObstacles
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+    Point Center{random(generator, SpawnObsWallMinDist, FieldLength),
+                 random(generator, SpawnObsWallMinDist, FieldWidth)};
+    int Radius = random(generator, SmallObsMinRad, SmallObsMaxRad);
+    Circle* Obstacle = new Circle{Center, Radius};
+    (*Obstacle).set_fill_color(SmallObsColor);
+    Obstacles.push_back(Obstacle);
 }
 
-void PlayersSpawn() {   // adds players to Players
-    for (size_t j = 0; j < NumOfPlayers; ++j) {
-        while (true)
+bool ObsDistPlayerCheck (Circle* Obstacle)  // obstacle not overlapping player
+{
+    for (size_t i = 0; i < Players.size(); ++i)
+    {
+        if (dist(Obstacle->center(), Players[i]->center()) < (Obstacle->radius() + PlayerRad + SpawnObsMinDist))
         {
-            Point Center {Graph_lib::randint(SpawnWallMinDist, FieldLength - SpawnWallMinDist), 
-                        Graph_lib::randint(SpawnWallMinDist, FieldWidth - SpawnWallMinDist)};
-            bool Checks = true;
-
-            // CHECKS:
-            for (size_t i = 0; i < HugeObstacles.size(); ++i) {
-                if (dist(Center, (*HugeObstacles[i]).center()) < (*HugeObstacles[i]).radius() + PlayerRad + SpawnObsMinDist) {
-                    Checks = false;
-                    break;
-                }
-            }
-
-            for (size_t i = 0; i < MediumObstacles.size(); ++i) {
-                if (dist(Center, (*MediumObstacles[i]).center()) < (*MediumObstacles[i]).radius() + PlayerRad + SpawnObsMinDist) {
-                    Checks = false;
-                    break;
-                }
-            }
-
-            for (size_t i = 0; i < SmallObstacles.size(); ++i) {
-                if (dist(Center, (*SmallObstacles[i]).center()) < (*SmallObstacles[i]).radius() + PlayerRad + SpawnObsMinDist) {
-                    Checks = false;
-                    break;
-                }
-            }
-
-            for (size_t i = 0; i < Players.size(); ++ i) {
-                if (dist(Center, (*Players[i]).center()) < PlayerRad + PlayerRad + SpawnBetwMinDist) {
-                    Checks = false;
-                    break;
-                }
-            }
-
-            if (Checks) {
-                Circle* Player = new Circle {Center, PlayerRad};
-                (*Player).set_fill_color(Color::dark_green);
-                Players.push_back(Player);
-                break;
-            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
+}
+
+void ObstaclesRespawn ()  // regenerates obstacles with existing players
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+    Obstacles.clear();
+
+    for (int i = 0; i < NumOfHugeObs; ++i)
+    {
+        for (int j = 0; j < ObstacleReSpawnTries; ++j)
+        {
+            Point Center{NotsoRandomPoint(HugeObsPower)};
+            int Radius = random(generator, HugeObsMinRad, HugeObsMaxRad);
+            Circle* Obstacle = new Circle{Center, Radius};
+            if (ObsDistPlayerCheck(Obstacle))
+            {
+                (*Obstacle).set_fill_color(HugeObsColor);
+                Obstacles.push_back(Obstacle);
+            }
+        }
+        error("Not enough space for Huge Obstacle! ");
+    }  // Если большие препятствия нашли себе место, то остальные и подавно найдут
+
+    for (int i = 0; i < NumOfMediumObs; ++i)
+    {
+        Point Center{NotsoRandomPoint(MediumObsPower)};
+        int Radius = random(generator, MediumObsMinRad, MediumObsMaxRad);
+        Circle* Obstacle = new Circle{Center, Radius};
+        if (ObsDistPlayerCheck(Obstacle))
+        {
+            (*Obstacle).set_fill_color(MediumObsColor);
+            Obstacles.push_back(Obstacle);
+        }
+    }
+
+    for (int i = 0; i < NumOfSmallObs; ++i)
+    {
+        Point Center{random(generator, SpawnObsWallMinDist, FieldLength),
+                     random(generator, SpawnObsWallMinDist, FieldWidth)};
+        int Radius = random(generator, SmallObsMinRad, SmallObsMaxRad);
+        Circle* Obstacle = new Circle{Center, Radius};
+        if (ObsDistPlayerCheck(Obstacle))
+        {
+            (*Obstacle).set_fill_color(SmallObsColor);
+            Obstacles.push_back(Obstacle);
+        }
+    }
+}
+
+// players generation
+bool PlayerDistObsCheck (Point Player)  // Player not overlapping Obstacles
+{
+    for (size_t i = 0; i < Obstacles.size(); ++i)
+    {
+        if (dist(Player, Obstacles[i]->center()) < (Obstacles[i]->radius() + PlayerRad + SpawnObsMinDist))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool PlayerDistPlayersCheck (Point Player)  // Player not overlapping Players
+{
+    for (size_t i = 0; i < Players.size(); ++i)
+    {
+        if (dist(Player, Players[i]->center()) < (PlayerRad + PlayerRad + SpawnBetwMinDist))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+void PlayerSpawn ()  // adds player to Players
+{
+    PRNG generator;
+    initGenerator(generator);
+    srand(time(NULL));
+    for (int i = 0; i < PlayerSpawnTries; ++i)
+    {
+        Point Center{random(generator, SpawnWallMinDist, FieldLength - SpawnWallMinDist),
+                     random(generator, SpawnWallMinDist, FieldWidth - SpawnWallMinDist)};
+
+        if (PlayerDistObsCheck(Center))
+            &&(PlayerDistPlayersCheck(Center))
+            {
+                Circle* Player = new Circle{Center, PlayerRad};
+                if (RainbowPlayers)
+                {
+                    int color = random(generator, 1, 13);
+                    if ((int)color == 5)
+                    {
+                        color = 0
+                    }  // Перекрашивает черных
+                    (*Player).set_fill_color(Color::color);
+                }
+                else
+                {
+                    (*Player).set_fill_color(PlayerColor);
+                }
+                Players.push_back(Player);
+                return;
+            }
+    }
+    error("Not enough space for player! ");
+}
+
+void PlayersSpawn ()  // adds players to Players
+{
+    for (int i = 0; i < NumOfPlayers; ++i)
+    {
+        PlayerSpawn();
+    }
+}
+
+void Generate ()
+{
+    HugeObsSpawn();
+    MediumObsSpawn();
+    SmallObsSpawn();
+    PlayersSpawn();
 }

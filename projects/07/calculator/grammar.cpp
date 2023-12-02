@@ -3,23 +3,22 @@
 #include "variable.h"
 #include <std_lib_facilities.h>
 
-double statement ()  // 1) Разделение входа на объявление переменных,
-                     // констант и вычисления
+double statement ()  // Разделение входа на работу с переменными и числами
 {
     Token t = ts.get();
     switch (t.kind)
     {
     case let:
-        return declaration(false);  // Объявление переменной
+        return declaration(false);
     case constc:
-        return declaration(true);  // Объявлеине константы
+        return declaration(true);
     default:
         ts.putback(t);
-        return expression();  // Вычисления
+        return expression();
     }
 }
 
-double expression ()  // 2) Плюс, минус
+double expression ()  // Сложение и вычситание
 {
     double left = term();
 
@@ -32,6 +31,7 @@ double expression ()  // 2) Плюс, минус
         case '+':
             left += term();
             break;
+
         case '-':
             left -= term();
             break;
@@ -42,9 +42,9 @@ double expression ()  // 2) Плюс, минус
     }
 }
 
-double term ()  // 3) Умножение, деление, остаток от деления
+double term ()  // Умножение, деление и остаток от деления
 {
-    double left = primary();
+    double left = powterm();
 
     while (true)
     {
@@ -53,23 +53,23 @@ double term ()  // 3) Умножение, деление, остаток от д
         switch (t.kind)
         {
         case '*':
-            left *= primary();
+            left *= powterm();
             break;
 
         case '/':
         {
-            double d = primary();
+            double d = powterm();
             if (d == 0)
-                error("На ноль делить нельзя ");
+                error("division by zero");
             left /= d;
             break;
         }
         case '%':
         {
-            double d = primary();
+            double d = powterm();
             if (d == 0)
             {
-                error("На ноль делить нельзя ");
+                error("division by zero");
             }
             left -= d * int(left / d);
             break;
@@ -81,7 +81,37 @@ double term ()  // 3) Умножение, деление, остаток от д
     }
 }
 
-double primary ()  // 4) Скобки, +- числа, переменные
+double powterm ()  // степени
+{
+    double left = primary();
+
+    while (true)
+    {
+        Token t = ts.get();
+
+        switch (t.kind)
+        {
+        case '^':
+        {
+            double d = primary();
+            if (left == 0 && d == 0)
+            {
+                left = 1;
+            }
+            else
+            {
+                left = pow(left, d);
+            }
+            break;
+        }
+        default:
+            ts.putback(t);
+            return left;
+        }
+    }
+}
+
+double primary ()  // +- числа и скобки
 {
     Token t = ts.get();
     switch (t.kind)
@@ -92,7 +122,7 @@ double primary ()  // 4) Скобки, +- числа, переменные
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' expected");
+            error("')' expected ");
         }
         return d;
     }
@@ -120,41 +150,42 @@ double primary ()  // 4) Скобки, +- числа, переменные
     }
     default:
 
-        error("primary expected");
+        error("primary expected ");
     }
 }
 
-void clean_up_mess ()  // Скип строки
+void clean_up_mess ()  // не принимает ничего, пока не придет printkey
 {
     ts.ignore();
 }
 
-void calculate ()  // Калькулирование
+void calculate ()  // Калькулирует
 {
     std::cout << prompt;
     while (cin)
         try
         {
             Token t = ts.get();
-
             while (t.kind == print)
             {
                 std::cout << prompt;
                 t = ts.get();
             }
-
             if (t.kind == quit)
             {
                 return;
             }
-
             else if (t.kind == helpchar)
             {
-                std::cout << "Вы попросили о помощи                        \n";
-                std::cout << "Доступные операции: +, -, *, /, %, ^         \n";
-                std::cout << "pow(a,b), sqrt(a), sin(a), cos(a), log(a,b)  \n";
-                std::cout << "Объявление переменных через #имя = значение  \n";
-                std::cout << "А констант через const имя = значение        \n";
+                std::cout << "You asked for help                                    \n";
+                std::cout << "available operations: + - * / % ^                     \n";
+                std::cout << "available functions:                                  \n";
+                std::cout << "\"pow(a,b)\" the number a to the power of b           \n";
+                std::cout << "\"sqrt(a)\" square root of a                          \n";
+                std::cout << "\"sin(a)\" sinus of a; \"cos(a) cosinus of a          \n";
+                std::cout << "\"log(a,b)\" logarithm of a on base b                 \n";
+                std::cout << "\"#a = value\" declaring variable                     \n";
+                std::cout << "\"const a = value\" declaring constant                \n";
                 ts.ignore();
             }
             else
@@ -170,19 +201,22 @@ void calculate ()  // Калькулирование
         }
 }
 
-double asignment (Token t)  // Changes value of a variable
+double asignment (Token t)  // Изменение значения переменной
 {
     if (t.kind != name)
-        error("name expected in asignment");
-    string va = t.name;
-    if (!symbol_table.is_declared(va))
-        error(va, " is not declared");
-    for (size_t i = 0; i < (int)symbol_table.v.size(); ++i)
+        error("name lost in asignment ");
+
+    string var = t.name;
+
+    if (!symbol_table.is_declared(var))
+        error(var, " is not declared ");
+
+    for (size_t i = 0; i < symbol_table.v.size(); ++i)
     {
-        if (symbol_table.v[i].name == va)
+        if (symbol_table.v[i].name == var)
         {
-            return symbol_table.set_value(va, expression());
+            return symbol_table.set_value(var, expression());
         }
     }
-    error(va, " is not declared");
+    error(var, " is not declared ");
 }

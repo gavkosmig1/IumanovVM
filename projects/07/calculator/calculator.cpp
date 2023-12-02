@@ -7,23 +7,22 @@
 int main ()
 try
 {
-    setlocale(LC_ALL, "Russian");
-    std::cout << "Калькулятор by Юманов Василий Михайлович  \n";
-    std::cout << "Чтобы попросить о помощи, введите help    \n";
+    std::cout << "Calculator by Yumanov Vasiliy gavkosmig   \n";
+    std::cout << "Type \"help\" to ask for help             \n";
 
-    symbol_table.define_name("pi", 3.141592653589793, true);
-    symbol_table.define_name("e", 2.718281828459045, true);
-    symbol_table.define_name("k", 1000, true);
+    symbol_table.define_name("pi", 3.141592653589793, true);  // Pi
+    symbol_table.define_name("e", 2.718281828459045, true);   // Euler's number
+    symbol_table.define_name("k", 1000, true);                // 1000
 
     calculate();
 }
 catch (exception& e)
 {
-    cerr << "Ошибка: " << e.what() << endl;
+    cerr << "exception: " << e.what() << endl;
     return 1;
 }
 catch (...)
 {
-    cerr << "Неизвестная ошибка " << endl;
+    cerr << "Oops, unknown exception " << endl;
     return 2;
 }

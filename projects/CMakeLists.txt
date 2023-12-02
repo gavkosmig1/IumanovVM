@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+project(aboba)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wextra")
@@ -10,7 +12,7 @@ include_directories(
     ${LIB_DIR}
 )
 
-# add_subdirectory(07/calculator)
+add_subdirectory(07/calculator)
 
 # add_subdirectory(08/vec)
 # add_subdirectory(08/logic_elements)
@@ -23,4 +25,4 @@ add_subdirectory(ch12/shape_primitives)
 # add_subdirectory(ch13/hexagon_tile)
 
 # add_subdirectory(least_squares)
-# add_subdirectory(Titanfall-3)
+add_subdirectory(Titanfall-3)

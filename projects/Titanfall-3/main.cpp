@@ -1,31 +1,36 @@
 // у меня не робят закоменченные инклюды лол
 #include "level_gen.h"
-#include "settings.h"
+//#include "main.h"
 //
-#include <Graph_lib/Graph.h>
-#include <Graph_lib/Simple_window.h>
-// #include "server.h"
-// #include "client.h"
-using namespace Graph_lib;
+//#include <Graph_lib/Graph.h>
+//#include <Graph_lib/Simple_window.h>
+#include "server.h"
+#include "client.h"
+#include <string>
+#include <iostream>
+#include <thread>
+//using namespace Graph_lib;
 
-int main()
+int main() 
+try
 {
-    HugeObsSpawn();
-    MediumObsSpawn();
-    SmallObsSpawn();    // adds obstacles to SmallObstacles
-    PlayersSpawn(); 
+    std::string ip = "127.0.0.1";
+    int port = 55355;
 
-    Simple_window win{Point(100,100), FieldLength, FieldWidth, "Window"};
-    for (int i{0}; i<HugeObstacles.size(); ++i){
-        win.attach(*HugeObstacles[i]);
-    };
+    std::thread srv(server_test, port); // starts rn
+    std::thread cli(client_test, ip.c_str(), port);
 
-    for (int i{0}; i<MediumObstacles.size(); ++i){
-        win.attach(*MediumObstacles[i]);
-    };
-
-    for (int i{0}; i<Players.size(); ++i){
-        win.attach(*Players[i]);
-    };
-    win.wait_for_button();
+    // waits for finish its exec
+    srv.join();
+    cli.join();
+}
+catch (exception& e)
+{
+    cerr << "Error: " << e.what() << endl;
+    return 1;
+}
+catch (...)
+{
+    cerr << "Unknown error " << endl;
+    return 2;
 }

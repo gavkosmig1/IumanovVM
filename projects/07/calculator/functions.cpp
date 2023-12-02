@@ -14,16 +14,16 @@ double square_root ()  // Квадратный корень
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' забыт в сквирте ");
+            error("')' lost in sqrt ");
         }
-        if (d < 0)  // Негатив чек
+        if (d < 0)
         {
-            error("Мнимый результат ");
+            error("Imaginary result ");
         }
         return sqrt(d);
     }
     default:
-        error("'(' забыт в сквирте ");
+        error("'(' lost on sqrtr ");
     }
 }
 
@@ -38,18 +38,18 @@ double power ()  // Степень
         t = ts.get();
         if (t.kind != ',')
         {
-            error("',' забыт при возведении в степень ");
+            error("',' lost in pow ");
         }
         double r = expression();
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')'  забыт при возведении в степень ");
+            error("')' lost in pow ");
         }
         return pow(l, r);
     }
     default:
-        error("'(' забыт при возведении в степень ");
+        error("'(' lost in pow ");
     }
 }
 
@@ -64,39 +64,38 @@ double logarithm ()  // Логарифм
         t = ts.get();
         if (t.kind != ',')
         {
-            error("',' забыт в логарифме ");
+            error("',' lost in log ");
         }
 
         if (l < 0)
         {
-            error("отрицательное основание логарифма ");
+            error("negative logarithm base ");
         }
         else if (l == 1)
         {
-            error("основание логарифма не может быть равным '1'");
+            error("logarithm base can't be 1");
         }
 
         double r = expression();
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' забыт в логарифме ");
+            error("')' lost in log ");
         }
 
         if (r < 0)
         {
-            error("отрицательный аргумент логарифма ");
+            error("negative logarithm value ");
         }
 
         return (log(r)) / (log(l));
     }
     default:
-        error("'(' забыт в логарифме");
+        error("'(' lost in log ");
     }
 }
 
-double sine ()  // Синус
-
+double sine ()  // синус
 {
     Token t = ts.get();
     switch (t.kind)
@@ -107,17 +106,16 @@ double sine ()  // Синус
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' забыт в синусе ");
+            error("')' lost in sin ");
         }
         return sin(d);
     }
     default:
-        error("'(' забыт в синусе ");
+        error("'(' lost in sin ");
     }
 }
 
-double cosine ()  // Косинус
-
+double cosine ()  // косинус
 {
     Token t = ts.get();
     switch (t.kind)
@@ -128,11 +126,11 @@ double cosine ()  // Косинус
         t = ts.get();
         if (t.kind != ')')
         {
-            error("')' забыт в косинусе ");
+            error("')' lost in cos ");
         }
         return cos(d);
     }
     default:
-        error("'(' забыт в косинусе");
+        error("'(' lost in cos ");
     }
 }

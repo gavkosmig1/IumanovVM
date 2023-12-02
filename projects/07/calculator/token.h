@@ -30,7 +30,8 @@ class Token_stream
     void ignore ();
 };
 
-const char quit = 'q';          // Какой символ обозначает тип токена
+// то, что хранится как тип токена
+const char quit = 'q';
 const char print = '\n';
 const char number = '8';
 const char name = 'a';
@@ -39,10 +40,14 @@ const char ctrlzchar = (char)((int)(26));
 const char helpchar = 'h';
 const char constc = 'c';
 
-const string prompt = "> ";     // Все кейворды
+const char romemode = 'r';
+const char decimode = 'd';
+
+// команлы
+const string prompt = "> ";
 const string result = "= ";
 const string quitkey = "exit";
-const string sqrtkey = "sqrt";  
+const string sqrtkey = "sqrt";
 const string powkey = "pow";
 const string logkey = "log";
 const string sinkey = "sin";
@@ -50,6 +55,9 @@ const string coskey = "cos";
 const string helpkey = "help";
 const string Helpkey = "Help";
 const string constkey = "const";
+
+const string romekey = "Roman";
+const string decikey = "decimal";
 
 extern Token_stream ts;
 

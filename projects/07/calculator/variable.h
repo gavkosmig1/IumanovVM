@@ -12,24 +12,20 @@ struct Variable
     Variable(string n, double v, bool isc) : name{n}, value{v}, isconstant{isc} {}
 };
 
-class Symbol_table  // Работа с хранилищем элементов
+class Symbol_table  // Хранилище переменных
 {
-    public:
-        vector<Variable> v;  // Само хранилище
+  public:
+    vector<Variable> v;  // Вектор с переменными
 
-        Symbol_table(vector<Variable> v_t) : v{v_t} {}
+    Symbol_table(vector<Variable> v_t) : v{v_t} {}
 
-        double define_name (const string& var, double val, bool icg);  // Запись переменной
-
-        double get_value (const string& s);  // Получение значения переменной
-
-        bool is_declared (const string& s);  // Занято ли имя переменной чек
-
-        double set_value (const string& s, double d);  // Перезапись переменной
+    double get_value (const string& s);  // Получение значения существующей переменной
+    bool is_declared (const string& s);  // Объявлена ли переменная чек
+    double set_value (const string& s, double d);  // Устанавливает значение существующей переменной
+    double define_name (const string& var, double val, bool icg);  // Запись переменной
 };
 
-double declaration (bool is_const);  // Объявление переменной
-// Не затрагивает символьную таблицу и просто ищет ошибки
+double declaration (bool is_const);  // объявление переменной
 
 extern vector<Variable> var_table;
 extern Symbol_table symbol_table;

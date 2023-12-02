@@ -2,25 +2,25 @@
 #include "functions.h"
 #include <std_lib_facilities.h>
 
-void Token_stream::putback(Token t)  // Временно хранит токен в буфере
+void Token_stream::putback(Token t)  // Сохарняет токен, чтобы тот не потерялся
 {
     if (full)
-        error("putback() в непустой буфер ");
+        error("putback() into a full buffer ");
 
     buffer = t;
     full = true;
 }
 
-Token Token_stream::get()  // Получение данных из входной строки
+Token Token_stream::get()  // Считывание входа
 {
-    if (full)  // В первую очередь брать из буфера
+    if (full)  // Первым делом проверить буфер
     {
         full = false;
         return buffer;
     }
 
-    char ch = ' ';       // Вместо пробела можно другие приколы удалять
-    while (isspace(ch))  // Удаление пробелов
+    char ch = ' ';
+    while (isspace(ch))  // скип пробелов
     {
         ch = cin.get();
         if (cin.eof())
@@ -36,15 +36,12 @@ Token Token_stream::get()  // Получение данных из входно�
             return Token{print};
         }
     }
-
     cin.putback(ch);
     cin >> ch;
     if (!cin)
     {
-        std::cout << "Входной поток пуст, завершение программы... ";
         exit(0);
     }
-
     switch (ch)
     {
     case '(':
@@ -54,9 +51,10 @@ Token Token_stream::get()  // Получение данных из входно�
     case '*':
     case '/':
     case '%':
-    case '=':
-    case '#':
+    case '^':
     case ',':
+    case '#':
+    case '=':
         return Token{ch};
     case '.':
     case '0':
@@ -70,30 +68,28 @@ Token Token_stream::get()  // Получение данных из входно�
     case '8':
     case '9':
     {
-        cin.putback(ch);
+        cin.putback(ch);  // Счёт числа с плавающей точкой
         double val;
         cin >> val;
         return Token{number, val};
     }
 
     default:
-        if (isalpha(ch))  // Чтение кейвордов и имен переменных
+        if (isalpha(ch))  // Счет буквы из названия функции
         {
             string s;
-            s += ch;
+            s += ch;  // Костыль
             while (cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_'))
             {
-                s += ch;  // Чтение слова
+                s += ch;
             }
-
             if (ch == ctrlzchar)
             {
-                std::cout << "Выполнение программы заверешенно комбинацией клавиш Ctrl+Z ";
                 exit(0);
             }
             cin.putback(ch);
 
-            if (s == quitkey)  // Строку нельзя сделать через switch/case :(
+            if (s == quitkey)
                 return Token{quit};
             else if (s == sqrtkey)
                 return Token{number, square_root()};
@@ -112,11 +108,11 @@ Token Token_stream::get()  // Получение данных из входно�
             return Token{name, s};
         }
 
-        error("Bad token");
+        error("Bad token ");
     }
 }
 
-void Token_stream::ignore()  // Скип строки
+void Token_stream::ignore()  // скип до следующего \n
 {
     if (full && buffer.kind == print)
     {
