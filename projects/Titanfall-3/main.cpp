@@ -1,28 +1,28 @@
 // у меня не робят закоменченные инклюды лол
 #include "level_gen.h"
-//#include "main.h"
+// #include "main.h"
 //
-//#include <Graph_lib/Graph.h>
-//#include <Graph_lib/Simple_window.h>
-#include "server.h"
+// #include <Graph_lib/Graph.h>
+// #include <Graph_lib/Simple_window.h>
 #include "client.h"
-#include <string>
+#include "server.h"
 #include <iostream>
+#include <string>
 #include <thread>
-//using namespace Graph_lib;
+// using namespace Graph_lib;
 
-int main() 
+int main ()
 try
 {
-    std::string ip = "127.0.0.1";
-    int port = 55355;
+    //     std::string ip = "127.0.0.1";
+    //     int port = 55355;
 
-    std::thread srv(server_test, port); // starts rn
-    std::thread cli(client_test, ip.c_str(), port);
+    //     std::thread srv(server_test, port); // starts rn
+    //     std::thread cli(client_test, ip.c_str(), port);
 
-    // waits for finish its exec
-    srv.join();
-    cli.join();
+    //     // waits for finish its exec
+    //     srv.join();
+    //     cli.join();
 }
 catch (exception& e)
 {

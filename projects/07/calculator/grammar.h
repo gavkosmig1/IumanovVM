@@ -1,8 +1,8 @@
 #ifndef GRAMMAR_H
 #define GRAMMAR_H 1
 
+#include "std_lib_facilities.h"
 #include "token.h"
-#include <std_lib_facilities.h>
 
 double statement ();  // Разделение входа на работу с переменными и числами
 

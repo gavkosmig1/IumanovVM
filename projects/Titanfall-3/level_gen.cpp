@@ -199,26 +199,25 @@ void PlayerSpawn ()  // adds player to Players
         Point Center{random(generator, SpawnWallMinDist, FieldLength - SpawnWallMinDist),
                      random(generator, SpawnWallMinDist, FieldWidth - SpawnWallMinDist)};
 
-        if (PlayerDistObsCheck(Center))
-            &&(PlayerDistPlayersCheck(Center))
+        if ((PlayerDistObsCheck(Center)) && (PlayerDistPlayersCheck(Center)))
+        {
+            Circle* Player = new Circle{Center, PlayerRad};
+            if (RainbowPlayers)
             {
-                Circle* Player = new Circle{Center, PlayerRad};
-                if (RainbowPlayers)
+                int color = random(generator, 1, 13);
+                if ((int)color == 5)
                 {
-                    int color = random(generator, 1, 13);
-                    if ((int)color == 5)
-                    {
-                        color = 0
-                    }  // Перекрашивает черных
-                    (*Player).set_fill_color(Color::color);
-                }
-                else
-                {
-                    (*Player).set_fill_color(PlayerColor);
-                }
-                Players.push_back(Player);
-                return;
+                    color = 0
+                }  // Перекрашивает черных
+                (*Player).set_fill_color(Color::color);
             }
+            else
+            {
+                (*Player).set_fill_color(PlayerColor);
+            }
+            Players.push_back(Player);
+            return;
+        }
     }
     error("Not enough space for player! ");
 }

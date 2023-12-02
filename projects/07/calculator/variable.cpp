@@ -1,7 +1,6 @@
 #include "variable.h"
 #include "grammar.h"
 #include "token.h"
-#include <std_lib_facilities.h>
 
 vector<Variable> var_table;
 Symbol_table symbol_table(var_table);

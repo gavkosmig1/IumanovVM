@@ -1,7 +1,6 @@
 #include "grammar.h"
 #include "functions.h"
 #include "variable.h"
-#include <std_lib_facilities.h>
 
 double statement ()  // Разделение входа на работу с переменными и числами
 {
