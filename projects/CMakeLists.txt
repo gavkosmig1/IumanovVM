@@ -12,6 +12,8 @@ include_directories(
     ${LIB_DIR}
 )
 
+add_subdirectory(Titanfall-3)
+
 add_subdirectory(07/calculator)
 
 # add_subdirectory(08/vec)
@@ -19,10 +21,9 @@ add_subdirectory(07/calculator)
 
 
 # add_subdirectory(ch12/koch_snowflake)
-add_subdirectory(ch12/shape_primitives)
+# add_subdirectory(ch12/shape_primitives)
 # add_subdirectory(ch13/cross_wheel)
 # add_subdirectory(ch13/fibonacci_spiral)
 # add_subdirectory(ch13/hexagon_tile)
 
 # add_subdirectory(least_squares)
-# add_subdirectory(Titanfall-3)

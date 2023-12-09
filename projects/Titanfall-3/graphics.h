@@ -3,20 +3,26 @@
 
 #include <Graph_lib/Graph.h>
 #include <Graph_lib/Simple_window.h>
-#include "std_lib_facilities.h"
 #include <Graph_lib/GUI.h>
+
+#include "enviroment.h"
+#include <bits/stdc++.h>
+#include <vector>
+
 using namespace Graph_lib;
 
-struct Game_window : Graph_lib::Window
+extern std::vector<std::string *> pl_name; // our players
+extern std::string *equation;
+struct Game_window : Graph_lib::Window // create a new window
 {
-  Game_window(Point xy, int w, int h, const string &title);
+  Game_window(Point xy, int w, int h, const std::string &title);
+  void wait_for_button();
 
 private:
   Button play_button;
-  Graph_lib::Button quit_button;
-
-private:
+  Button quit_button;
   // Button Quit
+  bool button_pushed = false;
   static void cb_quit(Address, Address widget);
   void quit() { hide(); }
   // Button Play

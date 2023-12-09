@@ -3,7 +3,7 @@
 set(TARGET "Titanfall-3")
 
 set(HEADERS
-    # level_gen.h
+    level_gen.h
     enviroment.h
     graphics.h
     ${LIB_DIR}/Graph_lib/fltk.h
@@ -16,9 +16,9 @@ set(HEADERS
 set(SOURCES
     main.cpp
     enviroment.cpp
-    # draw.cpp
+    draw.cpp
     graphics.cpp    
-    # level_gen.cpp
+    level_gen.cpp
     ${LIB_DIR}/Graph_lib/Graph.cpp
     ${LIB_DIR}/Graph_lib/GUI.cpp
     ${LIB_DIR}/Graph_lib/Window.cpp
