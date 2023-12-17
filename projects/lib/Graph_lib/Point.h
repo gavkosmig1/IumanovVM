@@ -35,8 +35,6 @@ inline bool operator== (Point a, Point b) { return a.x == b.x && a.y == b.y; }
 
 inline bool operator!= (Point a, Point b) { return !(a == b); }
 
-inline double dist (Point a, Point b) { return std::pow(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2), 0.5); }
-
 }  // namespace Graph_lib
 
 #endif  // POINT_GUARD

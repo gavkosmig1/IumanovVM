@@ -5,18 +5,17 @@
 
 using namespace Graph_lib;
 
-std::vector<Obstacle*> Obstacles;
-std::vector<Point*> Players;
+double dist (Point a, Point b) { return pow(pow(a.x - b.x, 2) + pow(a.y - b.y, 2), 0.5); }
 
 // random tech
-void initGenerator (PRNG& generator)  // generates seed for random
-{
-    const unsigned seed = unsigned(std::time(nullptr));
+void initGenerator (PRNG& generator)
+{  // generates seed for random
+    const unsigned seed = unsigned(time(NULL));
     generator.engine.seed(seed);  // Получение случайного зерна для рандома
 }
 
-unsigned random (PRNG& generator, unsigned minValue, unsigned maxValue)  // gives random ints
-{
+unsigned random (PRNG& generator, unsigned minValue, unsigned maxValue)
+{  // gives random ints
     // Создаётся распределение
     std::uniform_int_distribution<unsigned> distribution(minValue, maxValue);
     // Вычисляется число, вызвав распределение как функцию, передав генератор произвольных чисел аргументом
@@ -24,76 +23,66 @@ unsigned random (PRNG& generator, unsigned minValue, unsigned maxValue)  // give
 }
 
 // obstacles generation
-Point NotsoRandomPoint (double Power)  // Point "Power" far away from the center
-{
-    PRNG generator;
-    initGenerator(generator);
-
+Point NotsoRandomPoint (GenerationSettings& settings, PRNG& generator, double Power)
+{  // Point "Power" far away from the center
     int xsign = (rand() % 2 == 0) ? 1 : -1;
     int ysign = (rand() % 2 == 0) ? 1 : -1;
-    int x =
-        static_cast<int>(pow(
-            random(generator, 0, static_cast<int>(pow((FieldLength - SpawnObsWallMinDist) / 2, Power))), 1 / Power)) *
-            xsign +
-        (FieldLength / 2) + (SpawnObsWallMinDist / 2);
-    int y =
-        static_cast<int>(pow(random(generator, 0, static_cast<int>(pow((FieldWidth - SpawnObsWallMinDist) / 2, Power))),
-                             1 / Power)) *
-            ysign +
-        (FieldWidth / 2) + (SpawnObsWallMinDist / 2);
+    int x = static_cast<int>(
+                pow(random(generator, 0,
+                           static_cast<int>(pow((settings.FieldWidth - settings.SpawnObsWallMinDist) / 2, Power))),
+                    1 / Power)) *
+                xsign +
+            (settings.FieldWidth / 2) + (settings.SpawnObsWallMinDist / 2);
+    int y = static_cast<int>(
+                pow(random(generator, 0,
+                           static_cast<int>(pow((settings.FieldHeight - settings.SpawnObsWallMinDist) / 2, Power))),
+                    1 / Power)) *
+                ysign +
+            (settings.FieldHeight / 2) + (settings.SpawnObsWallMinDist / 2);
     return Graph_lib::Point(x, y);
 }
 
-void HugeObsSpawn ()  // adds obstacles to HugeObstacles
-{
-    PRNG generator;
-    initGenerator(generator);
-
-    for (size_t i = 0; i < NumOfHugeObs; ++i)
+void HugeObsSpawn (GenerationSettings& settings, PRNG& generator, std::vector<Obstacle>& Obs_vec)
+{  // adds obstacles to HugeObstacles
+    for (int i = 0; i < settings.NumOfHugeObs; ++i)
     {
-        Point Center{NotsoRandomPoint(HugeObsPower)};
-        int Radius = random(generator, HugeObsMinRad, HugeObsMaxRad);
+        Point Center{NotsoRandomPoint(settings, generator, settings.HugeObsPower)};
+        int Radius = random(generator, settings.HugeObsMinRad, settings.HugeObsMaxRad);
 
-        Obstacle* Obs = new Obstacle{Center, Radius, false};
-        Obstacles.push_back(Obs);
+        Obstacle Obs = Obstacle{Center, Radius, false};
+        Obs_vec.push_back(Obs);
     }
 }
 
-void MediumObsSpawn ()  // adds obstacles to MediumObstacles
-{
-    PRNG generator;
-    initGenerator(generator);
-
-    for (size_t i = 0; i < NumOfMediumObs; ++i)
+void MediumObsSpawn (GenerationSettings& settings, PRNG& generator, std::vector<Obstacle>& Obs_vec)
+{  // adds obstacles to MediumObstacles
+    for (int i = 0; i < settings.NumOfMediumObs; ++i)
     {
-        Point Center{NotsoRandomPoint(MediumObsPower)};
-        int Radius = random(generator, MediumObsMinRad, MediumObsMaxRad);
+        Point Center{NotsoRandomPoint(settings, generator, settings.MediumObsPower)};
+        int Radius = random(generator, settings.MediumObsMinRad, settings.MediumObsMaxRad);
 
-        Obstacle* Obs = new Obstacle{Center, Radius, false};
-        Obstacles.push_back(Obs);
+        Obstacle Obs = Obstacle{Center, Radius, false};
+        Obs_vec.push_back(Obs);
     }
 }
 
-void SmallObsSpawn ()  // adds obstacles to SmallObstacles
-{
-    PRNG generator;
-    initGenerator(generator);
-
-    for (size_t i = 0; i < NumOfSmallObs; ++i)
+void SmallObsSpawn (GenerationSettings& settings, PRNG& generator, std::vector<Obstacle>& Obs_vec)
+{  // adds obstacles to SmallObstacles
+    for (int i = 0; i < settings.NumOfSmallObs; ++i)
     {
-        Point Center{NotsoRandomPoint(SmallObsPower)};
-        int Radius = random(generator, SmallObsMinRad, SmallObsMaxRad);
+        Point Center{NotsoRandomPoint(settings, generator, settings.SmallObsPower)};
+        int Radius = random(generator, settings.SmallObsMinRad, settings.SmallObsMaxRad);
 
-        Obstacle* Obs = new Obstacle{Center, Radius, false};
-        Obstacles.push_back(Obs);
+        Obstacle Obs = Obstacle{Center, Radius, false};
+        Obs_vec.push_back(Obs);
     }
 }
 
-bool ObsDistPlayerCheck (const Obstacle& Obs)  // obstacle not overlapping player
-{
-    for (size_t i = 0; i < Players.size(); ++i)
+bool ObsDistPlayerCheck (GenerationSettings& settings, const Obstacle& Obs, const std::vector<Player>& players_vec)
+{  // obstacle not overlapping player
+    for (size_t i = 0; i < players_vec.size(); ++i)
     {
-        if (dist(Obs.center, *Players[i]) < (Obs.radius + PlayerRad + SpawnObsMinDist))
+        if (dist(Obs.center, Point{-100, -100}) < (Obs.radius + settings.PlayerRad + settings.SpawnObsMinDist))
         {
             return false;
         }
@@ -101,61 +90,67 @@ bool ObsDistPlayerCheck (const Obstacle& Obs)  // obstacle not overlapping playe
     return true;
 }
 
-void ObstaclesRespawn ()  // regenerates obstacles with existing players
-{
+void ObstaclesRespawn (GenerationSettings& settings, std::vector<Player>& players, std::vector<Obstacle>& Obs_vec)
+{  // regenerates obstacles with existing players
+    Obs_vec.clear();
+
     PRNG generator;
     initGenerator(generator);
-    Obstacles.clear();
 
-    for (size_t i = 0; i < NumOfHugeObs; ++i)
+    for (int i = 0; i < settings.NumOfHugeObs; ++i)
     {
-        for (size_t j = 0; j < ObstacleReSpawnTries; ++j)
+        for (int j = 0; j < settings.ObstacleReSpawnTries; ++j)
         {
-            Point Center{NotsoRandomPoint(HugeObsPower)};
-            int Radius = random(generator, HugeObsMinRad, HugeObsMaxRad);
-            Obstacle* Obs = new Obstacle{Center, Radius, false};
-            if (ObsDistPlayerCheck(*Obs))
+            Point Center{NotsoRandomPoint(settings, generator, settings.HugeObsPower)};
+            int Radius = random(generator, settings.HugeObsMinRad, settings.HugeObsMaxRad);
+
+            Obstacle Obs = Obstacle{Center, Radius, false};
+            if (ObsDistPlayerCheck(settings, Obs, players))
             {
-                Obstacles.push_back(Obs);
+                Obs_vec.push_back(Obs);
                 break;
             }
         }
         // throw NoSpaceObstacleException();
     }  // Если большие препятствия нашли себе место, то остальные и подавно найдут
 
-    for (size_t i = 0; i < NumOfMediumObs; ++i)
+    for (int i = 0; i < settings.NumOfMediumObs; ++i)
     {
-        for (size_t j = 0; j < ObstacleReSpawnTries; ++j)
+        for (int j = 0; j < settings.ObstacleReSpawnTries; ++j)
         {
-            Point Center{NotsoRandomPoint(MediumObsPower)};
-            int Radius = random(generator, MediumObsMinRad, MediumObsMaxRad);
-            Obstacle* Obs = new Obstacle{Center, Radius, false};
-            if (ObsDistPlayerCheck(*Obs))
+            Point Center{NotsoRandomPoint(settings, generator, settings.MediumObsPower)};
+            int Radius = random(generator, settings.MediumObsMinRad, settings.MediumObsMaxRad);
+            Obstacle Obs = Obstacle{Center, Radius, false};
+            if (ObsDistPlayerCheck(settings, Obs, players))
             {
-                Obstacles.push_back(Obs);
+                Obs_vec.push_back(Obs);
                 break;
             }
         }
     }
 
-    for (size_t i = 0; i < NumOfSmallObs; ++i)
+    for (int i = 0; i < settings.NumOfSmallObs; ++i)
     {
-        Point Center{NotsoRandomPoint(SmallObsPower)};
-        int Radius = random(generator, SmallObsMinRad, SmallObsMaxRad);
-        Obstacle* Obs = new Obstacle{Center, Radius, false};
-        if (ObsDistPlayerCheck(*Obs))
+        for (int j = 0; j < settings.ObstacleReSpawnTries; ++j)
         {
-            Obstacles.push_back(Obs);
+            Point Center{NotsoRandomPoint(settings, generator, settings.SmallObsPower)};
+            int Radius = random(generator, settings.SmallObsMinRad, settings.SmallObsMaxRad);
+            Obstacle Obs = Obstacle{Center, Radius, false};
+            if (ObsDistPlayerCheck(settings, Obs, players))
+            {
+                Obs_vec.push_back(Obs);
+                break;
+            }
         }
     }
 }
 
 // players generation
-bool PlayerDistObsCheck (const Point& Player)  // Player not overlapping Obstacles
-{
-    for (size_t i = 0; i < Obstacles.size(); ++i)
+bool PlayerDistObsCheck (GenerationSettings& settings, const Point& Player_pos, const std::vector<Obstacle>& Obs_vec)
+{  // Player not overlapping Obstacles
+    for (size_t i = 0; i < Obs_vec.size(); ++i)
     {
-        if (dist(Player, (*Obstacles[i]).center) < ((*Obstacles[i]).radius + PlayerRad + SpawnObsMinDist))
+        if (dist(Player_pos, Obs_vec[i].center) < (Obs_vec[i].radius + settings.PlayerRad + settings.SpawnObsMinDist))
         {
             return false;
         }
@@ -163,11 +158,12 @@ bool PlayerDistObsCheck (const Point& Player)  // Player not overlapping Obstacl
     return true;
 }
 
-bool PlayerDistPlayersCheck (const Point& Player)  // Player not overlapping Players
-{
-    for (size_t i = 0; i < Players.size(); ++i)
+bool PlayerDistPlayersCheck (GenerationSettings& settings, const Point& Player_pos,
+                             const std::vector<Player>& players_vec)
+{  // Player not overlapping Players
+    for (size_t i = 0; i < players_vec.size(); ++i)
     {
-        if (dist(Player, *Players[i]) < (PlayerRad + PlayerRad + SpawnBetwMinDist))
+        if (dist(Player_pos, players_vec[i].GetPos()) < (2 * settings.PlayerRad + settings.SpawnBetwMinDist))
         {
             return false;
         }
@@ -175,37 +171,35 @@ bool PlayerDistPlayersCheck (const Point& Player)  // Player not overlapping Pla
     return true;
 }
 
-void PlayerSpawn ()  // adds player to Players
+void GenerateObstacles (GenerationSettings& settings, std::vector<Obstacle>& obstacles)
 {
     PRNG generator;
     initGenerator(generator);
 
-    for (size_t i = 0; i < PlayerSpawnTries; ++i)
-    {
-        Point* Player = new Point{static_cast<int>(random(generator, SpawnWallMinDist, FieldLength - SpawnWallMinDist)),
-                                  static_cast<int>(random(generator, SpawnWallMinDist, FieldWidth - SpawnWallMinDist))};
+    HugeObsSpawn(settings, generator, obstacles);
+    MediumObsSpawn(settings, generator, obstacles);
+    SmallObsSpawn(settings, generator, obstacles);
+}
 
-        if ((PlayerDistObsCheck(*Player)) && (PlayerDistPlayersCheck(*Player)))
+void GeneratePlayer (GenerationSettings& settings, Player& player_, const std::vector<Obstacle>& obstacles,
+                     const std::vector<Player>& players_vec)
+{
+    PRNG generator;
+    initGenerator(generator);
+
+    for (size_t i = 0; i < settings.PlayerSpawnTries; ++i)
+    {
+        Point Player = Point{static_cast<int>(random(generator, settings.SpawnWallMinDist,
+                                                     settings.FieldWidth - settings.SpawnWallMinDist)),
+                             static_cast<int>(random(generator, settings.SpawnWallMinDist,
+                                                     settings.FieldHeight - settings.SpawnWallMinDist))};
+
+        if ((PlayerDistObsCheck(settings, Player, obstacles)) &&
+            (PlayerDistPlayersCheck(settings, Player, players_vec)))
         {
-            Players.push_back(Player);
+            player_.SetPos(Player);
             return;
         }
     }
     // throw NoSpacePlayerException();
-}
-
-void PlayersSpawn (int NumOfPlayersAdded)  // adds players to Players
-{
-    for (size_t i = 0; i < NumOfPlayersAdded; ++i)
-    {
-        PlayerSpawn();
-    }
-}
-
-void Generate ()
-{
-    HugeObsSpawn();
-    MediumObsSpawn();
-    SmallObsSpawn();
-    PlayersSpawn(NumOfPlayers);
 }

@@ -1,62 +1,313 @@
 #include "graphics.h"
+#include "level_gen.h"
+#include "settings.h"
+#include <Fl/Enumerations.H>
+
 #include <bits/stdc++.h>
 
 using namespace Graph_lib;
 
-std::vector<std::string *> pl_name;
-std::string *equation;
-
-Game_window::Game_window(Point xy, int w, int h, const std::string &title)
-    : Window(xy, w, h, title),
-      play_button{Point{50, 50}, 70, 20, "Play", cd_play},
-      quit_button{Point{x_max() - 70, 0}, 70, 20, "Quit", cb_quit}
-
+void control_close (Fl_Widget* widget, void*)
 {
-  attach(quit_button);
-  attach(play_button);
+    wanna_exit = true;
+    Fl_Window* window = dynamic_cast<Fl_Window*>(widget);
+    window->hide();
+    while (Fl::first_window())
+    {
+        delete Fl::first_window();
+    }
 }
 
-void Game_window::cb_quit(Address, Address widget)
+void control_not_close (Fl_Widget*, void*) {}
+
+void SliderInput::Slider_CB2()
 {
-  auto &btn = reference_to<Button>(widget);
-  dynamic_cast<Game_window &>(btn.window()).quit();
+    static int recurse = 0;
+    if (recurse)
+    {
+        return;
+    }
+    else
+    {
+        recurse = 1;
+        char s[80];
+        sprintf(s, "%d", (int)(slider->value() + .5));
+        // fprintf(stderr, "SPRINTF(%d) -> '%s'\n", (int)(slider->value()+.5), s);
+        input->value(s);  // pass slider's value to input
+        recurse = 0;
+    }
 }
 
-void Game_window::cd_play(Address, Address widget)
+void SliderInput::Input_CB2()
 {
-  auto &btn = reference_to<Button>(widget);
-  dynamic_cast<Game_window &>(btn.window()).play();
+    static int recurse = 0;
+    if (recurse)
+    {
+        return;
+    }
+    else
+    {
+        recurse = 1;
+        int val = 0;
+        if (sscanf(input->value(), "%d", &val) != 1)
+        {
+            val = 0;
+        }
+        // fprintf(stderr, "SCANF('%s') -> %d\n", input->value(), val);
+        if (val > max_val)
+        {
+            input->value(std::to_string(max_val).c_str());
+            val = max_val;
+        }
+        else if (val < min_val)
+        {
+            input->value(std::to_string(min_val).c_str());
+            val = min_val;
+        }
+        slider->value(val);  // pass input's value to slider
+        recurse = 0;
+    }
 }
 
-void Game_window::play()
+SliderInput::SliderInput(int x, int y, int w, int h, const char* l, int min_, int max_)
+    : Fl_Group(x, y, w, h, l), min_val{min_}, max_val{max_}
 {
-  button_pushed = true;
-  this->detach(play_button);
-  Simple_window win{Point(500, 100), 200, 160, "data"};
+    int in_w = 40;
+    input = new Fl_Int_Input(x, y, in_w, h);
+    input->callback(Input_CB, (void*)this);
+    input->when(FL_WHEN_ENTER_KEY | FL_WHEN_NOT_CHANGED);
 
-  In_box Name{Point(80, 40), 50, 20, "Name: "}; // entering name
-  win.attach(Name);
+    slider = new Fl_Slider(x + in_w, y, w - in_w, h);
+    slider->type(1);
+    slider->callback(Slider_CB, (void*)this);
 
-  In_box IP{Point(80, 90), 50, 20, "Ip: "}; // entering ip
-  win.attach(IP);
-
-  win.wait_for_button();
-
-  std::string *name1 = new std::string{Name.get_string()}; // reading name
-  // ip1 = IP.get_string();                                   // reading ip
-
-  pl_name.push_back(name1);
-  // In_box equat{Point(300, 300), 200, 100, "Equation:"};
-
-  // this->attach(equat);
-  // equation = new std::string{equat.get_string()};
-  // this->wait_for_button();
+    bounds(min_, max_);  // some usable default
+    value(min_);         // some usable default
+    end();               // close the group
 }
 
-void Game_window::wait_for_button() // conservation window
+Screen::Screen(Point xy, int w, int h, const std::string& title, bool& my_turn)
+    : Window(xy, w, h, title), host_button{Point{50, 50}, 100, 20, "Start game", cd_host},
+      quit_button{Point{50, 80}, 100, 20, "Go out", cd_quit}, nick_input{Point(400, 50), 150, 20, "Your nickname: "},
+      game_name{Point{30, 30}, GameName}
 {
-  while (!button_pushed && Fl::wait())
-    ;
-  button_pushed = false;
-  Fl::redraw();
+    game_name.set_color(Graph_lib::Color::dark_cyan);
+    attach(quit_button);
+    attach(host_button);
+    attach(nick_input);
+    attach(game_name);
+    game_name.set_font(Graph_lib::Font::helvetica);
+    game_name.set_font_size(20);
+    size_range(FieldWidth, FieldHeight, FieldWidth, FieldHeight);
+    control_win.hide();
+    gamin_now = false;
+}
+
+Screen::~Screen()
+{
+    detach(host_button);
+    detach(quit_button);
+    detach(game_name);
+    detach(nick_input);
+}
+
+void Screen::cd_quit(Address, Address widget)
+{
+    auto& btn = reference_to<Button>(widget);
+    dynamic_cast<Screen&>(btn.window()).event_quit();
+}
+
+void Screen::event_quit()
+{
+    wanna_exit = true;
+    hide();
+}
+
+void Screen::cd_host(Address, Address widget)
+{
+    auto& btn = reference_to<Button>(widget);
+    dynamic_cast<Screen&>(btn.window()).event_host();
+}
+
+void Screen::event_host()
+{
+    button_pushed = true;
+    Simple_window mini_menu{Point(500, 100), HostWin_x, HostWin_y, "Create a server..."};
+    mini_menu.size_range(HostWin_x, HostWin_y, HostWin_x, HostWin_y);  // lock size
+    mini_menu.next_button.move(-HostWin_x + bg_offset + mini_menu.next_button.width, HostWin_y - bg_offset + 5);
+
+    // change some global vars ---------------------------------------
+    mini_menu.Graph_lib::Window::begin();
+    Fl_Box* box = new Fl_Box(bg_offset, bg_offset + 10, HostWin_x - 2 * bg_offset, HostWin_y - 2 * bg_offset - 10);
+    box->box(FL_UP_BOX);
+    box->labelfont(FL_BOLD + FL_ITALIC);
+    box->labelsize(36);
+    box->labeltype(FL_SHADOW_LABEL);
+
+    int x_offset = 10, txt_offset = 45, slide_w = 200, slide_h = 25;
+
+    Text t{Point{bg_offset + 60, btn_begin + 10}, "GAME SETTINGS"};
+    mini_menu.attach(t);
+    t.set_font(Graph_lib::Font::helvetica);
+    t.set_font_size(NickSize);
+
+    // SliderInput *sl_0 = new SliderInput(bg_offset + x_offset, btn_begin + txt_offset,
+    //                                     slide_w, slide_h,
+    //                                     "Player amount", NumOfPlayers, 15);
+
+    SliderInput* sl_1 = new SliderInput(bg_offset + x_offset, btn_begin + txt_offset + btn_betw, slide_w, slide_h,
+                                        "Amount of huge obstacles");
+
+    SliderInput* sl_2 = new SliderInput(bg_offset + x_offset, btn_begin + txt_offset + 2 * btn_betw, slide_w, slide_h,
+                                        "Amount of medium obstacles");
+
+    SliderInput* sl_3 = new SliderInput(bg_offset + x_offset, btn_begin + txt_offset + 3 * btn_betw, slide_w, slide_h,
+                                        "Amount of small obstacles");
+
+    mini_menu.Graph_lib::Window::end();
+    // end -----------------------------------------------------------
+
+    mini_menu.wait_for_button();
+    // get values ---------------------------------------------------
+
+    // получаем значения с ползунков
+
+    data.push_back(sl_1->value());
+    data.push_back(sl_2->value());
+    data.push_back(sl_3->value());
+
+    // считываем порт
+    // PORT = port.get_int();
+    IM_A_HOST = true;
+
+    delete box;
+    delete sl_1;
+    delete sl_2;
+    delete sl_3;
+}
+
+GenerationSettings Screen::settings()
+{
+    return GenerationSettings{.NumOfPlayers = NumOfPlayers,
+                              .NumOfHugeObs = this->data[0],
+                              .NumOfMediumObs = this->data[1],
+                              .NumOfSmallObs = this->data[2]};
+}
+
+void Screen::wait_for_button()  // conservation window
+{
+    while (!button_pushed && Fl::wait())
+    {
+    };
+    if (!gamin_now)
+    {
+        hide_menu();
+    }
+    else
+    {
+        //...
+    }
+    button_pushed = false;
+    Fl::redraw();
+}
+
+void Screen::control_show()
+{
+    control_win.show();
+    control_win.set_label("game contol");
+    gamin_now = true;
+}
+
+void Screen::control_hide()
+{
+    control_win.hide();
+    gamin_now = false;
+}
+
+// TODO: ДОДЕЛАТЬ
+InputMenu::InputMenu(Point xy, int w, int h, const std::string& title)
+    : Window(xy, w, h, title), data_output{Point{40, 116}, 305, 20, "info:"},
+      func_input{Point{35, 20}, 310, 20, "y = "}, left{Point{5, 50}, 85, 20, "Shoot left", left_bt},
+      right{Point(105, 50), 85, 20, "Shoot right", right_bt},
+      disconnect{Point(245, 80), 100, 20, "Leave game...", leave_bt},
+      restart{Point(195, 50), 150, 20, "Restart game", restart_bt}, fire{Point(5, 80), 85, 20, "Fire", fire_bt}
+{
+    this->size_range(InputWidth, InputHeight, InputWidth, InputHeight);  // lock size
+    callback(control_not_close);
+
+    attach(data_output);
+    attach(func_input);
+    attach(left);
+    attach(right);
+    attach(disconnect);
+    attach(restart);
+    attach(fire);
+    to_the_right = true;
+    game_button_pushed = false;
+    std::string line;
+}
+
+// WAIT_FOR_BUTTON
+
+input_data InputMenu::wait_for_restart()  // conservation window
+{
+    while (!button_pushed && Fl::wait())
+    {
+    };
+    button_pushed = false;
+    Fl::redraw();
+    input_data* s = new input_data{.g_s = game_state::RESPAWN};
+    return *s;
+}
+
+void InputMenu::print_text(std::string text) { this->data_output.put(text); }
+
+input_data InputMenu::wait_for_game_button()
+{
+    this->show();
+    while (Fl::wait() && !game_button_pushed)
+    {
+    };
+    game_button_pushed = false;
+    Fl::redraw();
+    input_data s{state, line, to_the_right};
+    return s;
+}
+
+// RESTART
+void InputMenu::restart_()
+{
+    state = game_state::RESPAWN;
+    game_button_pushed = true;
+}
+
+// FIRE
+void InputMenu::fr()
+{
+    line = func_input.get_string();
+    state = game_state::FIRE;
+    game_button_pushed = true;
+}
+
+// LEAVE
+void InputMenu::leave()
+{
+    state = game_state::LEAVE;
+    game_button_pushed = true;
+}
+
+// RIGHT
+void InputMenu::rt() { to_the_right = true; }
+
+// LEFT
+void InputMenu::lt() { to_the_right = false; }
+
+InputMenu::~InputMenu()
+{
+    left.hide();
+    right.hide();
+    disconnect.hide();
+    restart.hide();
+    data_output.hide();
+    func_input.hide();
 }
