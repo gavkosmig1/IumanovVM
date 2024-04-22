@@ -2,11 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\CalcNikit",
-    "\\CalcNikit\\calculator",
-    "\\CalcNikit\\textfiles",
-    "\\Calculator",
-    "\\Calculator\\Stroustrupp govnarb"
+    "\\CalcNikit\\calculator"
   ],
-  "SelectedNode": "\\Calculator\\Stroustrupp govnarb\\TokenStream.h",
   "PreviewInSolutionExplorer": false
 }
