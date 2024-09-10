@@ -12,9 +12,13 @@ include_directories(
     ${LIB_DIR}
 )
 
-add_subdirectory(Titanfall-3)
+add_subdirectory(aboltus/01)
 
-add_subdirectory(07/calculator)
+# add_subdirectory(Titanfall-3)
+
+# add_subdirectory(07/CMakeProject1)
+
+# add_subdirectory(07/calculator)
 
 # add_subdirectory(08/vec)
 # add_subdirectory(08/logic_elements)

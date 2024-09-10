@@ -10,4 +10,8 @@ double logarithm ();
 double sine ();
 double cosine ();
 
+string toRoman (const int& number);  // Возвращает римское значение чисел
+int RomanValue (const char& r);      // Возвращает численное значение римких буков
+int ToDecimal (const string& str);   // Переводит римское число в десятичное
+
 #endif

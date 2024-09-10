@@ -1,0 +1,6 @@
+C:/Documents/GitHub/IumanovVM/build/CMakeFiles/INSTALL.dir
+C:/Documents/GitHub/IumanovVM/build/CMakeFiles/ALL_BUILD.dir
+C:/Documents/GitHub/IumanovVM/build/CMakeFiles/ZERO_CHECK.dir
+C:/Documents/GitHub/IumanovVM/build/aboltus/01/CMakeFiles/calculator.dir
+C:/Documents/GitHub/IumanovVM/build/aboltus/01/CMakeFiles/INSTALL.dir
+C:/Documents/GitHub/IumanovVM/build/aboltus/01/CMakeFiles/ALL_BUILD.dir

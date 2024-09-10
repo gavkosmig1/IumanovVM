@@ -40,10 +40,10 @@ const char ctrlzchar = (char)((int)(26));
 const char helpchar = 'h';
 const char constc = 'c';
 
-const char romemode = 'r';
-const char decimode = 'd';
+const char rome = 'r';
+const char deci = 'd';
 
-// команлы
+// то, что выводится / вводится
 const string prompt = "> ";
 const string result = "= ";
 const string quitkey = "exit";
@@ -57,7 +57,7 @@ const string Helpkey = "Help";
 const string constkey = "const";
 
 const string romekey = "Roman";
-const string decikey = "decimal";
+const string decikey = "Decimal";
 
 extern Token_stream ts;
 

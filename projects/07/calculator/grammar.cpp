@@ -160,6 +160,7 @@ void clean_up_mess ()  // не принимает ничего, пока не п
 
 void calculate ()  // Калькулирует
 {
+    bool Roman_mode = false;
     std::cout << prompt;
     while (cin)
         try
@@ -173,6 +174,18 @@ void calculate ()  // Калькулирует
             if (t.kind == quit)
             {
                 return;
+            }
+            else if (t.kind == rome)
+            {
+                Roman_mode = true;
+                cout << "You entered Roman mode!" << endl;
+                ts.ignore();
+            }
+            else if (t.kind == deci)
+            {
+                Roman_mode = false;
+                cout << "You entered Decimal mode!" << endl;
+                ts.ignore();
             }
             else if (t.kind == helpchar)
             {
@@ -190,7 +203,10 @@ void calculate ()  // Калькулирует
             else
             {
                 ts.putback(t);
-                cout << result << statement() << endl;
+                if (!Roman_mode)
+                    cout << result << statement() << endl;
+                else
+                    cout << result << statement() << endl;
             }
         }
         catch (runtime_error& e)

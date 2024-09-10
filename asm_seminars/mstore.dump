@@ -1,0 +1,25 @@
+
+mstore.o:     file format pe-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <multstore>:
+   0:	53                   	push   %rbx
+   1:	48 83 ec 20          	sub    $0x20,%rsp
+   5:	4c 89 c3             	mov    %r8,%rbx
+   8:	e8 00 00 00 00       	call   d <multstore+0xd>
+   d:	48 89 03             	mov    %rax,(%rbx)
+  10:	48 83 c4 20          	add    $0x20,%rsp
+  14:	5b                   	pop    %rbx
+  15:	c3                   	ret
+  16:	90                   	nop
+  17:	90                   	nop
+  18:	90                   	nop
+  19:	90                   	nop
+  1a:	90                   	nop
+  1b:	90                   	nop
+  1c:	90                   	nop
+  1d:	90                   	nop
+  1e:	90                   	nop
+  1f:	90                   	nop

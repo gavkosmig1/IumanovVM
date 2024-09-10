@@ -105,6 +105,10 @@ Token Token_stream::get()  // Считывание входа
                 return Token{constc};
             else if (s == helpkey || s == Helpkey)
                 return Token{helpchar};
+            else if (s == romekey)
+                return Token{rome};
+            else if (s == decikey)
+                return Token{deci};
             return Token{name, s};
         }
 
