@@ -2,7 +2,8 @@
     "files.associations": {
         "ostream": "cpp",
         "istream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "random": "cpp"
     },
     "cmake.sourceDirectory": "C:/Documents/GitHub/IumanovVM/projects"
 }
