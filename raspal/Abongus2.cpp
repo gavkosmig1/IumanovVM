@@ -76,8 +76,8 @@ int main(int argc, char **argv)
     {
         if (N % size != 0)
         {
-            int t = N - part *size;
-            for (int i = 0; i < t-1; i++)
+            int a = N - part * size;
+            for (int i = 0; i < a-1; i++)
             {
                 res += (f(cur) + f(cur + ink)) * ink / 2.0;
                 cur += ink;
@@ -86,9 +86,10 @@ int main(int argc, char **argv)
     }
 
     double itog;
-    int red = MPI_Reduce(&res, &itog, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    check_for_suc(red);
-    if (rank == 0) {
+    int rc = MPI_Reduce(&res, &itog, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    check_for_suc(rc);
+    if (rank == 0)
+    {
         std::cout << "I think the PIE is equal to " << itog << std::endl;
     }
 

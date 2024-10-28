@@ -3,10 +3,8 @@
 #include <mpi.h>
 #include <fstream>
 
-void check_for_suc(int ec)
-{
-    if (ec != MPI_SUCCESS)
-    {
+void check_for_suc(int rc) {
+    if (rc != MPI_SUCCESS) {
         MPI_Abort(MPI_COMM_WORLD, rc);
     }
 }
