@@ -4,9 +4,6 @@
     <ClCompile Include="C:\Documents\GitHub\IumanovVM\semestr4\Cpp\homework\5\task_5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Documents\GitHub\IumanovVM\semestr4\Cpp\homework\5\Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Documents\GitHub\IumanovVM\semestr4\Cpp\homework\5\Log.h">

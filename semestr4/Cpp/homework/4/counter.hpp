@@ -3,7 +3,7 @@
 
 namespace task_4 {
     template<class T>
-    unsigned int count_val_ = 0;
+    inline unsigned int count_val_ = 0;
 }
 
 

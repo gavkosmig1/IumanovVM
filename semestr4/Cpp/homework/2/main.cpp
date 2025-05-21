@@ -5,23 +5,28 @@ namespace TypeListImpl {
     template <typename... Types>
     struct TypeList {};
 
+
     template <typename TypeList, int Index>
     struct GetType;
 
+    // Рекурсивный случай: "прокручиваем" список, пока Index != 0
     template <typename Head, typename... Tail, int Index>
     struct GetType<TypeList<Head, Tail...>, Index> {
         using type = typename GetType<TypeList<Tail...>, Index - 1>::type;
     };
 
+    // Базовый случай: Index == 0, возвращаем Head
     template <typename Head, typename... Tail>
     struct GetType<TypeList<Head, Tail...>, 0> {
         using type = Head;
     };
 
+    // Ошибка: индекс за пределами
     template <int Index>
     struct GetType<TypeList<>, Index> {
         static_assert(Index < 0, "Index out of bounds");
     };
+
 
     template <typename TypeList>
     struct Size; 
@@ -31,6 +36,7 @@ namespace TypeListImpl {
         static constexpr int value = sizeof...(Types);
     };
 
+
     template <typename TypeList, typename T>
     struct Contains;
 
@@ -38,6 +44,7 @@ namespace TypeListImpl {
     struct Contains<TypeList<Types...>, T> {
         static constexpr bool value = (std::is_same_v<T, Types> || ...);
     };
+
 
     template <typename TypeList, typename T, int Index = 0>
     struct IndexOf;
@@ -52,6 +59,7 @@ namespace TypeListImpl {
         static constexpr int value = IndexOf<TypeList<Tail...>, T, Index + 1>::value;
     };
 
+
     template <typename TypeList, typename T>
     struct PushBack;
 
@@ -60,6 +68,7 @@ namespace TypeListImpl {
         using type = TypeList<Types..., T>;
     };
 
+    
     template <typename TypeList, typename T>
     struct PushFront;
 

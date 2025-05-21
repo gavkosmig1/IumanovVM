@@ -1,54 +1,77 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef LOG_HPP
+#define LOG_HPP
 
-#include <string>
-#include <ctime> // Import the ctime library
-#include <deque>
+#include <ctime>
+#include <iomanip>
 #include <iostream>
-#include <iomanip>  // std::put_time
-#include <ostream>
-#include "../4/counter.hpp"
+#include <mutex>
+#include <string>
+#include <vector>
 
-enum log_type {
-    LOG_NORMAL,
-    LOG_WARNING,
-    LOG_ERROR
+#define LOG_NORMAL 0
+#define LOG_WARNING 1
+#define LOG_ERROR 2
+
+class Log {
+ public:
+  Log(const Log&) = delete;
+  Log& operator=(const Log&) = delete;
+
+  static Log* Instance() {
+    if (!instance_) instance_ = new Log();
+    return instance_;
+  }
+
+  void message(int level, const std::string& msg) {
+    if (events_.size() >= 10) events_.erase(events_.begin());
+
+    Event event{level, msg, GetCurrentTime()};
+    events_.push_back(event);
+  }
+
+  void print() {
+    for (const auto& event : events_) {
+      std::cout << event.time << " [" << LevelToString(event.level) << "] "
+                << event.message << '\n';
+    }
+  }
+
+ private:
+  Log() {}
+
+  struct Event {
+    int level;
+    std::string message;
+    std::string time;
+  };
+
+  std::vector<Event> events_;
+  static Log* instance_;
+
+  std::string GetCurrentTime() {
+    std::time_t t = std::time(nullptr);
+    std::tm tm;
+    localtime_s(&tm, &t);
+
+    char buf[20];
+    std::strftime(buf, sizeof(buf), "%d-%m-%Y %H:%M:%S", &tm);
+    return std::string(buf);
+  }
+
+  std::string LevelToString(int level) {
+    switch (level) {
+      case LOG_NORMAL:
+        return "NORMAL";
+      case LOG_WARNING:
+        return "WARNING";
+      case LOG_ERROR:
+        return "ERROR";
+      default:
+        return "UNKNOWN";
+    }
+  }
 };
 
-namespace task_5 {
-    class LogMessage {
-        std::string msg_, time_txt_;
-        log_type type_;
+Log* Log::instance_ = nullptr;
 
-    public:
-        friend std::ostream &operator <<(std::ostream &os, const LogMessage &lm) {
-            os << "[" << lm.time_txt_ << "] TYPE: " << lm.type_ << ", MESSAGE " << lm.msg_;
-            return os;
-        }
-
-        LogMessage(log_type type, std::string &msg);
-
-        ~LogMessage() = default;
-    };
-}
-
-
-class Log : counter<Log> {
-    size_t msg_count_ = 0, max_count_ = 0;
-    std::deque<task_5::LogMessage> message_pool_{};
-    Log(size_t N = 10);
-public:
-
-    static Log *Instance(size_t N = 10);
-
-    ~Log() = default;
-    Log(const Log&) = delete;
-    Log(const Log&&) = delete;
-
-    void message(log_type type, std::string msg);
-
-    void print();
-};
-
-
-#endif //LOG_H
+#endif  // LOG_HPP

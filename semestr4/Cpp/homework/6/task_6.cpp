@@ -2,18 +2,18 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <iomanip>  // ШОБЫ ДАБЛ КРУТО БЫЛО
+#include <iomanip>
 
 // CP
 struct Checkpoint {
     std::string name;
-    double latitude;  // я забыл кто из них долгота а кто широта, сложные слова ну и не важно
+    double latitude;
     double longitude;
     bool necessary;       // true = necessary CP
-    double penaltyHours;  // для необяз КП
+    double penaltyHours;
 };
 
-// Builder interface (no need for get() method)
+// Builder interface
 class CheckpointBuilder {
 public:
     virtual ~CheckpointBuilder() = default;
@@ -52,7 +52,7 @@ public:
     }
 };
 
-// ConcreteBuilder для суммирования штрафоув
+// ConcreteBuilder для суммирования штрафов
 class SumPenaltyBuilder : public CheckpointBuilder {
     double totalPenalty = 0.0;
 
@@ -72,7 +72,6 @@ public:
     }
 };
 
-// Director который использует билдер поданный
 template <typename Builder>
 void constructCheckpoints(const std::vector<Checkpoint>& checkpoints, Builder& builder) {
     builder.reset();
