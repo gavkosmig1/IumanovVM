@@ -1,0 +1,19 @@
+Process 1 nachal golosovanie
+Process 1 rasskazal o golosovanii 2
+Process 2 umer lol
+Process 3 umer lol
+Process 1 nichego ne uslyshal ot 2
+Process 1 rasskazal o golosovanii 3
+Process 1 nichego ne uslyshal ot 3
+Process 1 rasskazal o golosovanii 4
+Process 1 peredaet estafetu 4
+Process 4 poluchil list i govorit ok processu 1
+Process 4 rasskazal o golosovanii 5
+Process 4 peredaet estafetu 5
+Process 5 poluchil list i govorit ok processu 4
+Process 0 poluchil list i govorit ok processu 5
+Process 0 rasskazal o golosovanii 1
+Process 0 peredaet estafetu 1
+Process 1 objavlyaet o zavershenii golosovaniya!!!
+Process 5 rasskazal o golosovanii 0
+Process 5 peredaet estafetu 0

@@ -1,0 +1,45 @@
+Process 1 nachal golosovanie
+Process 1 rasskazal o golosovanii 2
+Process 1 rasskazal o golosovanii 3
+Process 1 rasskazal o golosovanii 4
+Process 2 dominiruet nad 1
+Process 2 nachal golosovanie
+Process 2 rasskazal o golosovanii 3
+Process 2 rasskazal o golosovanii 4
+Process 4 umer lol
+Process 7 umer lol
+Process 6 umer lol
+Process 5 umer lol
+Process 3 dominiruet nad 1
+Process 3 nachal golosovanie
+Process 0 umer lol
+Process 3 rasskazal o golosovanii 4
+Process 2 rasskazal o golosovanii 5
+Process 1 rasskazal o golosovanii 5
+Process 2 rasskazal o golosovanii 6
+Process 3 rasskazal o golosovanii 5
+Process 1 rasskazal o golosovanii 6
+Process 3 rasskazal o golosovanii 6
+Process 2 rasskazal o golosovanii 7
+Process 1 rasskazal o golosovanii 7
+Process 1 rasskazal o golosovanii 8
+Process 1 uslyshal OK
+Process 1 zhdet lidera
+Process 3 rasskazal o golosovanii 7
+Process 2 rasskazal o golosovanii 8
+Process 2 uslyshal OK ot 8
+Process 2 zhdet lidera
+Process 8 dominiruet nad 1
+Process 8 nachal golosovanie
+Process 8 otvechaet na golosonaie 2
+Process 2 uslyshal OK ot 3
+Process 2 zhdet lidera
+Process 3 rasskazal o golosovanii 8
+Process 3 otvechaet na golosonaie 2
+Process 3 uslyshal OK ot 8
+Process 3 zhdet lidera
+Process 8 otvechaet na golosonaie 3
+Process 8 izbran liderom
+Process 2 znaet o lidere 8
+Process 3 znaet o lidere 8
+Process 1 znaet o lidere 8

@@ -1,0 +1,3 @@
+C:/Documents/GitHub/IumanovVM/semestr4/Cpp/homework/build/CMakeFiles/task_1.dir
+C:/Documents/GitHub/IumanovVM/semestr4/Cpp/homework/build/CMakeFiles/ALL_BUILD.dir
+C:/Documents/GitHub/IumanovVM/semestr4/Cpp/homework/build/CMakeFiles/ZERO_CHECK.dir
