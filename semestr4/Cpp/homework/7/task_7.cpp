@@ -35,7 +35,7 @@ public:
     }
 };
 
-// имплементация через хеш таблици
+// имплементация через хеш таблицы
 class HashSetImpl : public SetImpl {
     std::unordered_set<int> data;
 public:
@@ -61,23 +61,20 @@ class Set {
     void SwitchImpl() {
         size_t sz = impl->elements().size();
 
-        bool usingHashNow = dynamic_cast<HashSetImpl*>(impl.get()) != nullptr;
+        bool SwithToHash = dynamic_cast<HashSetImpl*>(impl.get()) != nullptr;
 
 #ifdef DEBUGPRINT
-        std::string to = usingHashNow ? "vector" : "hash";
-        std::cout << "SWITCHIIIIN TO " << to << " with size: " << sz << std::endl;
+        std::string to = SwithToHash ? "vector" : "hash";
+        std::cout << "perekluchaus na " << to << " with size: " << sz << std::endl;
 #endif
 
-        // проверки тут лишние, но мне лень тестить потом
-        if (!usingHashNow && sz > kThreshold) {
-            // уходим на хештабло
+        if (!SwithToHash && sz > kThreshold) {
             auto elems = impl->elements();
             impl = std::make_unique<HashSetImpl>();
 
             for (int v : elems) impl->add(v);
 
-        } else if (usingHashNow && sz <= kThreshold) {
-            // или в вектор
+        } else if (SwithToHash && sz <= kThreshold) {
             auto elems = impl->elements();
             impl = std::make_unique<VectorSetImpl>();
 

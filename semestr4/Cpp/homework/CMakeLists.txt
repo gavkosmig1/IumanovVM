@@ -24,13 +24,13 @@ set(CMAKE_CXX_STANDARD 20)
 #         "5/task_5.cpp"
 #         "5/Log.h")
 
-add_executable(6
-        "6/task_6.cpp"
-)
-
-# add_executable(7
-#         "7/task_7.cpp"
+# add_executable(6
+#         "6/task_6.cpp"
 # )
+
+add_executable(7
+        "7/task_7.cpp"
+)
 
 # add_executable(8
 #         "8/task_8.cpp"
